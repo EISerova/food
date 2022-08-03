@@ -12,13 +12,14 @@ services:
     build:
       context: ../backend
       dockerfile: foodgram/Dockerfile
+    # environment:
+    #   - DB_HOST=db
     command: >
       sh -c "python /app/foodgram/manage.py makemigrations &&
              python /app/foodgram/manage.py migrate &&
              python /app/foodgram/manage.py collectstatic --noinput &&
              cd ./foodgram &&
              gunicorn foodgram.wsgi:application --bind 0.0.0.0:8000 --workers 3"
-
     volumes:
       - static_value:/app/static/
       - media_value:/app/media/
@@ -44,6 +45,8 @@ services:
       - ./nginx.conf:/etc/nginx/conf.d/default.conf
       - ../frontend/build:/usr/share/nginx/html/
       - ../docs/:/usr/share/nginx/html/api/docs/
+      - static_value:/var/html/static/
+      - media_value:/var/html/media/
   pgadmin:
     container_name: pgadmin4_container
     image: dpage/pgadmin4
@@ -58,6 +61,5 @@ services:
 volumes:
   static_value:
   media_value:
-  result_build:
 
 
