@@ -1,6 +1,7 @@
 from django.contrib import admin
 
 from users.models import User
+from .models import Ingridient, Tag
 
 
 @admin.register(User)
@@ -41,4 +42,57 @@ class UserClass(admin.ModelAdmin):
     )
     ordering = ('-create_at',)
     empty_value_display = '-пусто-'
+    
+    
+@admin.register(Ingridient)
+class IngridientClass(admin.ModelAdmin):
+    """Админка юзеров."""
+
+    list_display = (
+        'id',
+        'name',
+        'measurement_unit',
+    )
+    list_filter = (
+        'measurement_unit',
+    )
+    list_editable = (
+        'name',
+        'measurement_unit',
+    )
+    search_fields = (
+        'id',
+        'name',
+        'measurement_unit',
+    )
+    ordering = ('-id',)
+    empty_value_display = '-пусто-'
+    
+    
+@admin.register(Tag)
+class TagClass(admin.ModelAdmin):
+    """Админка тэгов."""
+
+    list_display = (
+        'id',
+        'name',
+        'color',
+        'slug',
+    )
+    list_filter = (
+        'color',
+    )
+    list_editable = (
+        'name',
+        'color',
+        'slug',
+    )
+    search_fields = (
+        'id',
+        'name',
+        'slug',
+    )
+    ordering = ('-id',)
+    empty_value_display = '-пусто-'
+
 

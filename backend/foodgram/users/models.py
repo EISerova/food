@@ -12,11 +12,12 @@ class User(AbstractUser):
         max_length=150,
         unique=True,
         validators=[RegexUsernameValidator, validate_username_not_me],
+        help_text='Обзательное поле. Не более 150 символов.'
     )
     first_name = models.CharField("Имя", max_length=150, blank=True)
     last_name = models.CharField("Фамилия", max_length=150, blank=True)
     email = models.EmailField("Почта", max_length=254, unique=True)
-    password = models.CharField("Пароль", max_length=254)
+    password = models.CharField("Пароль", max_length=150)
     confirmation_code = models.CharField(
         "Код подтверждения", max_length=CONFIRMATION_CODE_LENGTH, null=True
     )
