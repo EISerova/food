@@ -2,12 +2,13 @@
 Импорт json из папки data/.
 
 """
-from django.core.management.base import BaseCommand
 import json
+
+from django.core.management.base import BaseCommand
+
 from recipes.models import Ingridient
 
 
-    
 class Command(BaseCommand):
     DONE_MESSAGE = "Данные  перенесены в таблицу Ingridient."
     ERROR_MESSAGE = "Ошибка - {error}, проблема с данными - {row}."

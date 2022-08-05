@@ -1,9 +1,8 @@
 import os
-from datetime import timedelta
 from pathlib import Path
 
-from dotenv import load_dotenv
 from django.core.exceptions import ImproperlyConfigured
+from dotenv import load_dotenv
 
 load_dotenv()
 
@@ -36,8 +35,14 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    'users.apps.UsersConfig',
-    'recipes.apps.RecipesConfig',
+    "drf_yasg",
+    "rest_framework",
+    "rest_framework.authtoken",
+    "djoser",
+    "django_filters",
+    "users",
+    "api",
+    "recipes",
 ]
 
 MIDDLEWARE = [
@@ -129,4 +134,24 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-CONFIRMATION_CODE_LENGTH = 16
+
+DJOSER = {
+    "LOGIN_FIELD": "email",
+    "SERIALIZERS": {
+        "user": "api.serializers.CustomUserSerializer",
+        "user_create": "api.serializers.CustomUserCreateSerializer",
+        "current_user": "api.serializers.CustomUserSerializer",
+    },
+    "PERMISSIONS": {
+        "user_list": ("rest_framework.permissions.AllowAny",),
+        "user": ("rest_framework.permissions.AllowAny",),
+    },
+}
+
+
+REST_FRAMEWORK = {
+    "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.AllowAny",),
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework.authentication.TokenAuthentication",
+    ),
+}
