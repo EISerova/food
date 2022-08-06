@@ -8,7 +8,7 @@ LABEL email='katyaserova@yandex.ru'
 WORKDIR /app
 # COPY . .
 ADD requirements.txt /app/
-RUN pip3 install -r requirements.txt --no-cache-dir
+RUN pip3 install -r requirements.txt
 ADD . /app/
 
 # WORKDIR /app

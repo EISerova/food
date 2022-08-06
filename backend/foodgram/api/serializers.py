@@ -9,13 +9,27 @@ from users.models import User
 class CustomUserCreateSerializer(UserCreateSerializer):
     class Meta(UserCreateSerializer.Meta):
         model = User
-        fields = ("email", "id", "username", "first_name", "last_name", "password")
+        fields = (
+            "email",
+            "id",
+            "username",
+            "first_name",
+            "last_name",
+            "password",
+        )
 
 
 class CustomUserSerializer(UserSerializer):
     class Meta:
         model = User
-        fields = ("email", "id", "username", "first_name", "last_name")
+        fields = (
+            "email",
+            "id",
+            "username",
+            "first_name",
+            "last_name",
+            "is_subscribed",
+        )
 
 
 class RecipeSerializer(serializers.ModelSerializer):
