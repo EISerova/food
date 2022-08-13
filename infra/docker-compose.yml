@@ -4,20 +4,20 @@ services:
     container_name: db
     image: postgres:13.0-alpine
     volumes:
-      - /var/lib/postgresql/data/
+      - postgres_data:/var/lib/postgresql/data/
     env_file:
       - ./.env
+    restart: always
   web:
     container_name: foodgram
     build:
       context: ../backend
-      dockerfile: foodgram/Dockerfile
-    command: >
-      sh -c "python /app/foodgram/manage.py makemigrations &&
-             python /app/foodgram/manage.py migrate &&
-             python /app/foodgram/manage.py collectstatic --noinput &&
-             cd ./foodgram &&
-             gunicorn foodgram.wsgi:application --bind 0.0.0.0:8000 --workers 3"
+      dockerfile: Dockerfile
+    # command: >
+    #   sh -c "python /app/manage.py makemigrations &&
+    #          python /app/manage.py migrate &&
+    #          python /app/manage.py collectstatic --noinput &&
+    #          gunicorn foodgram.wsgi:application --bind 0.0.0.0:8000 --workers 3"
     environment:
       - DB_HOST=db
     volumes:
@@ -61,5 +61,6 @@ services:
 volumes:
   static_value:
   media_value:
+  postgres_data:
 
 

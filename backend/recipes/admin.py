@@ -2,7 +2,7 @@ from django.contrib import admin
 
 from users.models import User
 
-from .models import Ingredient, Tag
+from .models import Ingredient, Tag, Recipe
 
 
 @admin.register(User)
@@ -88,5 +88,23 @@ class TagClass(admin.ModelAdmin):
         "name",
         "slug",
     )
+    ordering = ("-id",)
+    empty_value_display = "-пусто-"
+
+
+@admin.register(Recipe)
+class RecipeClass(admin.ModelAdmin):
+    """Админка рецептов."""
+
+    list_display = (
+        "name",
+        "text",
+        "image",
+        "cooking_time",
+        "author",
+        # "ingredient",
+        # "tag",
+    )
+    list_filter = ("author", "name")
     ordering = ("-id",)
     empty_value_display = "-пусто-"

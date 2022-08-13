@@ -1,5 +1,6 @@
 import os
 from pathlib import Path
+import mimetypes
 
 from django.core.exceptions import ImproperlyConfigured
 from dotenv import load_dotenv
@@ -158,3 +159,19 @@ REST_FRAMEWORK = {
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.LimitOffsetPagination",
     "PAGE_SIZE": 100,
 }
+
+# mimetypes.add_type("application/javascript", ".js", True)
+
+# DEBUG_TOOLBAR_CONFIG = {
+#     "INTERCEPT_REDIRECTS": False,
+#     "SHOW_TOOLBAR_CALLBACK": lambda request: DEBUG,
+# }
+
+# if DEBUG:
+#     import socket
+
+#     hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
+#     INTERNAL_IPS = [ip[: ip.rfind(".")] + ".1" for ip in ips] + [
+#         "127.0.0.1",
+#         "10.0.2.2",
+#     ]

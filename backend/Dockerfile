@@ -5,18 +5,17 @@ LABEL email='katyaserova@yandex.ru'
 
 # ENV PYTHONUNBUFFERED 1
 
-WORKDIR /app
-# COPY . .
-ADD requirements.txt /app/
-RUN pip3 install -r requirements.txt
-ADD . /app/
-
 # WORKDIR /app
-# COPY requirements.txt /app
+# COPY requirements.txt .
+# RUN pip3 install -r requirements.txt
+# COPY . .
 
-# RUN pip3 install -r /app/requirements.txt --no-cache-dir
-# COPY ./ /app
+WORKDIR /app
+COPY requirements.txt /app
 
+RUN pip3 install -r /app/requirements.txt --no-cache-dir
+COPY ./ /app
+CMD gunicorn foodgram.wsgi:application --bind 0.0.0.0:8000
 
 # ADD . /code/
 # RUN pip install -r /code/requirements/docker.txt

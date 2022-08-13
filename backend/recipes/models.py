@@ -4,36 +4,11 @@ from django.db import models
 from users.models import User
 
 
-class Recipe(models.Model):
-    """Рецепт."""
-
-    name = models.TextField("Название", max_length=200)
-    text = models.TextField("Описание")
-    image = models.BinaryField(verbose_name="Изображение", editable=True)
-    cooking_time = models.PositiveSmallIntegerField(
-        "время приготовления", validators=[MinValueValidator(1)]
-    )
-    author = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="автор")
-
-    class Meta:
-        ordering = ("author",)
-        verbose_name = "Рецепт"
-        verbose_name_plural = "Рецепты"
-
-    def __str__(self):
-        return f"Рецепт - {self.name}"
-
-
 class Ingredient(models.Model):
     """Ингредиенты."""
 
     name = models.TextField("Название", max_length=256)
     measurement_unit = models.TextField("Мера измерения", max_length=256)
-    recipe = models.ForeignKey(
-        Recipe,
-        on_delete=models.CASCADE,
-        related_name="ingredients",
-    )
 
     class Meta:
         verbose_name = "Ингредиент"
@@ -46,8 +21,10 @@ class Ingredient(models.Model):
 class Tag(models.Model):
     """Тэги."""
 
-    name = models.TextField("Название", max_length=200)
-    color = models.TextField("Цвет в HEX", max_length=7, null=True)
+    name = models.TextField("Название", max_length=200, blank=True, null=True)
+    color = models.TextField(
+        "Цвет в HEX", max_length=7, blank=True, null=True, default="#ffffff"
+    )
     slug = models.TextField(
         "Уникальный слаг",
         max_length=200,
@@ -57,12 +34,8 @@ class Tag(models.Model):
                 message="Разрешены латинские буквы и цифры. Не более 200 символов.",
             ),
         ],
+        blank=True,
         null=True,
-    )
-    recipe = models.ForeignKey(
-        Recipe,
-        on_delete=models.CASCADE,
-        related_name="tags",
     )
 
     class Meta:
@@ -71,6 +44,46 @@ class Tag(models.Model):
 
     def __str__(self):
         return f"Тэг - {self.name}"
+
+
+class Recipe(models.Model):
+    """Рецепт."""
+
+    name = models.TextField("Название", max_length=200)
+    text = models.TextField("Описание")
+    image = models.ImageField(
+        verbose_name="Изображение", upload_to="recipes/", editable=True
+    )
+    cooking_time = models.PositiveSmallIntegerField(
+        "время приготовления", validators=[MinValueValidator(1)]
+    )
+    author = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="автор")
+    ingredients = models.ManyToManyField(
+        Ingredient,
+        through="IngredientRecipe",
+        verbose_name="ингредиент",
+    )
+    tags = models.ManyToManyField(Tag, verbose_name="тэг")
+
+    class Meta:
+        ordering = ("author",)
+        verbose_name = "Рецепт"
+        verbose_name_plural = "Рецепты"
+
+    def __str__(self):
+        return f"Рецепт - {self.name}"
+
+
+class IngredientRecipe(models.Model):
+    """Рецепт."""
+
+    ingredient = models.ForeignKey(
+        Ingredient, on_delete=models.CASCADE, related_name="ingredient_recipe"
+    )
+    recipe = models.ForeignKey(
+        Recipe, on_delete=models.CASCADE, related_name="ingredient_recipe"
+    )
+    amount = models.PositiveSmallIntegerField()
 
 
 class Follow(models.Model):
@@ -112,7 +125,7 @@ class Favorite(models.Model):
         ]
 
 
-class Shopping_cart(models.Model):
+class ShoppingCart(models.Model):
     """Список покупок"""
 
     user = models.ForeignKey(

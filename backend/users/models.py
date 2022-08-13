@@ -17,7 +17,6 @@ class User(AbstractUser):
     last_name = models.CharField("Фамилия", max_length=150, blank=True)
     email = models.EmailField("Почта", max_length=254, unique=True)
     password = models.CharField("Пароль", max_length=150)
-    is_subscribed = models.BooleanField('Подписка', default=False)
     create_at = models.DateTimeField("Дата регистрации", auto_now_add=True)
 
     def __str__(self):

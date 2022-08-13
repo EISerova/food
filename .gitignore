@@ -130,3 +130,7 @@ dmypy.json
 
 # .idea
 .idea
+
+cython_debug/
+
+.DS_store

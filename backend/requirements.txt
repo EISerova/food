@@ -7,12 +7,13 @@ click==8.1.2
 colorama==0.4.4
 coreapi==2.3.3
 coreschema==0.0.4
-Django==3.0.5
+Django>=3.0,<3.1
 django-environ==0.8.1
 django-filter==21.1
 django-templated-mail==1.1.1
 djangorestframework==3.12.4
 djangorestframework-simplejwt==4.8.0
+django-extra-fields==3.0.2
 djoser==2.1.0
 drf-yasg==1.20.0
 flake8==4.0.1
@@ -49,3 +50,6 @@ urllib3==1.26.9
 gunicorn==20.1.0
 psycopg2-binary==2.8.6
 asgiref==3.2.10
+pillow==9.0.0
+reportlab==3.6.11
+fpdf2==2.5.5

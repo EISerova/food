@@ -1,0 +1,31 @@
+version: "3.3"
+services:
+  backend:
+    # environment:
+    #   - SERVER_NAME=${DOMAIN?Variable not set}
+    #   - SERVER_HOST=https://${DOMAIN?Variable not set}
+    #   # Allow explicit env var override for tests
+    #   - SMTP_HOST=${SMTP_HOST}
+    env_file:
+      - .env
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+      # args:
+      #   INSTALL_DEV: ${INSTALL_DEV-false}
+    command:
+      [
+        "sh",
+        "-c",
+        "pip install uvicorn && pip install debugpy && python -m debugpy --wait-for-client --listen 0.0.0.0:5678 -m uvicorn app.main:app --reload --host 0.0.0.0 --port 8000"
+      ]
+    volumes:
+      - ./backend/app:/app
+    ports:
+      - 8000:8000
+      - 5678:5678
+
+networks:
+  traefik-public:
+    # For local dev, don't expect an external Traefik network
+    external: false
