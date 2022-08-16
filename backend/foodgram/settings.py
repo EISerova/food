@@ -36,11 +36,13 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    # 3rd Party Apps
     "drf_yasg",
     "rest_framework",
     "rest_framework.authtoken",
     "djoser",
     "django_filters",
+    # My Apps
     "users",
     "api",
     "recipes",
@@ -160,18 +162,23 @@ REST_FRAMEWORK = {
     "PAGE_SIZE": 100,
 }
 
-# mimetypes.add_type("application/javascript", ".js", True)
 
-# DEBUG_TOOLBAR_CONFIG = {
-#     "INTERCEPT_REDIRECTS": False,
-#     "SHOW_TOOLBAR_CALLBACK": lambda request: DEBUG,
-# }
+# Кастомные переменные
 
-# if DEBUG:
-#     import socket
-
-#     hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
-#     INTERNAL_IPS = [ip[: ip.rfind(".")] + ".1" for ip in ips] + [
-#         "127.0.0.1",
-#         "10.0.2.2",
-#     ]
+MIN_COOKING_TIME = 1
+TAG_SLUG_LENGTH_ERROR = "Разрешены латинские буквы и цифры. Не более 200 символов"
+USER_FIELD_RESPONSE = (
+    "email",
+    "id",
+    "username",
+    "first_name",
+    "last_name",
+)
+RECIPE_FIELD_RESPONSE = (
+    "ingredients",
+    "tags",
+    "image",
+    "name",
+    "text",
+    "cooking_time",
+)

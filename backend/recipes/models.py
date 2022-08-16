@@ -3,6 +3,8 @@ from django.db import models
 
 from users.models import User
 
+from foodgram.settings import MIN_COOKING_TIME, TAG_SLUG_LENGTH_ERROR
+
 
 class Ingredient(models.Model):
     """Ингредиенты."""
@@ -31,7 +33,7 @@ class Tag(models.Model):
         validators=[
             RegexValidator(
                 regex=r"^[-a-zA-Z0-9_]+$",
-                message="Разрешены латинские буквы и цифры. Не более 200 символов.",
+                message=TAG_SLUG_LENGTH_ERROR,
             ),
         ],
         blank=True,
@@ -55,15 +57,16 @@ class Recipe(models.Model):
         verbose_name="Изображение", upload_to="recipes/", editable=True
     )
     cooking_time = models.PositiveSmallIntegerField(
-        "время приготовления", validators=[MinValueValidator(1)]
+        "Время приготовления (в минутах)",
+        validators=[MinValueValidator(MIN_COOKING_TIME)],
     )
-    author = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="автор")
+    author = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Автор")
     ingredients = models.ManyToManyField(
         Ingredient,
         through="IngredientRecipe",
-        verbose_name="ингредиент",
+        verbose_name="Ингредиенты",
     )
-    tags = models.ManyToManyField(Tag, verbose_name="тэг")
+    tags = models.ManyToManyField(Tag, verbose_name="Тэги")
 
     class Meta:
         ordering = ("author",)
