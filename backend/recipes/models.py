@@ -1,9 +1,8 @@
 from django.core.validators import MinValueValidator, RegexValidator
 from django.db import models
+from foodgram.settings import MIN_COOKING_TIME, TAG_SLUG_LENGTH_ERROR
 
 from users.models import User
-
-from foodgram.settings import MIN_COOKING_TIME, TAG_SLUG_LENGTH_ERROR
 
 
 class Ingredient(models.Model):
@@ -60,7 +59,9 @@ class Recipe(models.Model):
         "Время приготовления (в минутах)",
         validators=[MinValueValidator(MIN_COOKING_TIME)],
     )
-    author = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Автор")
+    author = models.ForeignKey(
+        User, on_delete=models.CASCADE, verbose_name="Автор"
+    )
     ingredients = models.ManyToManyField(
         Ingredient,
         through="IngredientRecipe",
@@ -88,6 +89,12 @@ class IngredientRecipe(models.Model):
     )
     amount = models.PositiveSmallIntegerField()
 
+    class Meta:
+        verbose_name = "Ингредиенты рецепта"
+
+    def __str__(self):
+        return f"Рецепт - {self.recipe}, ингредиент - {self.ingredient}"
+
 
 class Follow(models.Model):
     """Подписка на авторов"""
@@ -98,7 +105,9 @@ class Follow(models.Model):
         related_name="follower",
         verbose_name="Подписчик",
     )
-    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="following")
+    author = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="following"
+    )
 
     class Meta:
         constraints = [
@@ -136,4 +145,6 @@ class ShoppingCart(models.Model):
         on_delete=models.CASCADE,
         related_name="shopping_cart",
     )
-    recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE, related_name="cart")
+    recipe = models.ForeignKey(
+        Recipe, on_delete=models.CASCADE, related_name="cart"
+    )

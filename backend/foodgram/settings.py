@@ -1,6 +1,6 @@
+import mimetypes
 import os
 from pathlib import Path
-import mimetypes
 
 from django.core.exceptions import ImproperlyConfigured
 from dotenv import load_dotenv
@@ -159,14 +159,16 @@ REST_FRAMEWORK = {
         "rest_framework.authentication.TokenAuthentication",
     ),
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.LimitOffsetPagination",
-    "PAGE_SIZE": 100,
+    "PAGE_SIZE": 10,
 }
 
 
 # Кастомные переменные
 
 MIN_COOKING_TIME = 1
-TAG_SLUG_LENGTH_ERROR = "Разрешены латинские буквы и цифры. Не более 200 символов"
+TAG_SLUG_LENGTH_ERROR = (
+    "Разрешены латинские буквы и цифры. Не более 200 символов"
+)
 USER_FIELD_RESPONSE = (
     "email",
     "id",
@@ -174,11 +176,9 @@ USER_FIELD_RESPONSE = (
     "first_name",
     "last_name",
 )
+
 RECIPE_FIELD_RESPONSE = (
-    "ingredients",
-    "tags",
-    "image",
     "name",
-    "text",
+    "image",
     "cooking_time",
 )

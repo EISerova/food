@@ -1,8 +1,15 @@
 from django.contrib import admin
-
 from users.models import User
 
-from .models import Ingredient, Tag, Recipe
+from .models import (
+    Ingredient,
+    Recipe,
+    Tag,
+    IngredientRecipe,
+    Follow,
+    Favorite,
+    ShoppingCart,
+)
 
 
 @admin.register(User)
@@ -102,9 +109,21 @@ class RecipeClass(admin.ModelAdmin):
         "image",
         "cooking_time",
         "author",
-        # "ingredient",
-        # "tag",
     )
     list_filter = ("author", "name")
     ordering = ("-id",)
+    empty_value_display = "-пусто-"
+
+
+@admin.register(IngredientRecipe)
+class IngredientRecipeClass(admin.ModelAdmin):
+    """Админка ингредиентов рецепта."""
+
+    list_display = (
+        "id",
+        "ingredient",
+        "recipe",
+        "amount",
+    )
+    ordering = ("-recipe",)
     empty_value_display = "-пусто-"

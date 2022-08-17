@@ -1,44 +1,25 @@
-from djoser.views import UserViewSet
-from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
-from rest_framework.response import Response
-from rest_framework.decorators import action
-from django.shortcuts import get_object_or_404
-from rest_framework.permissions import (
-    AllowAny,
-    IsAuthenticated,
-    IsAuthenticatedOrReadOnly,
-)
-from rest_framework import viewsets, mixins, permissions, authentication
-from rest_framework import status, viewsets
-from django.db.models import Sum
-from django_filters.rest_framework import DjangoFilterBackend
 from django.core.exceptions import ObjectDoesNotExist
-
+from django.db.models import Sum
+from django.shortcuts import get_object_or_404
+from django_filters.rest_framework import DjangoFilterBackend
+from djoser.views import UserViewSet
+from recipes.models import (Favorite, Follow, Ingredient, IngredientRecipe,
+                            Recipe, ShoppingCart, Tag)
+from rest_framework import (authentication, filters, mixins, permissions,
+                            status, viewsets)
+from rest_framework.decorators import action
+from rest_framework.permissions import (AllowAny, IsAuthenticated,
+                                        IsAuthenticatedOrReadOnly)
+from rest_framework.response import Response
+from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 from users.models import User
-from recipes.models import (
-    Tag,
-    Recipe,
-    Ingredient,
-    IngredientRecipe,
-    ShoppingCart,
-    Favorite,
-    Follow,
-)
 
-from .serializers import (
-    # RecipeSerializer,
-    TagSerializer,
-    IngredientSerializer,
-    ShoppingcartSerializer,
-    FavoriteSerializer,
-    FollowSerializer,
-    CustomUserSerializer,
-    RecipeCreateSeializer,
-    RecipeListSerializer,
-)
-from .utils import generate_pdf
-from rest_framework import filters
 from .filter import RecipeListFilter
+from .serializers import (CustomUserSerializer, FavoriteSerializer,
+                          FollowSerializer, IngredientSerializer,
+                          RecipeCreateSeializer, RecipeListSerializer,
+                          ShoppingcartSerializer, TagSerializer)
+from .utils import generate_pdf
 
 
 class CustomUserViewSet(UserViewSet):
@@ -52,10 +33,14 @@ class CustomUserViewSet(UserViewSet):
             try:
                 author = User.objects.get(id=id)
                 data = {"user": request.user.id, "author": author.id}
-                serializer = FollowSerializer(data=data, context={"request": request})
+                serializer = FollowSerializer(
+                    data=data, context={"request": request}
+                )
                 serializer.is_valid(raise_exception=True)
                 serializer.save()
-                return Response(serializer.data, status=status.HTTP_201_CREATED)
+                return Response(
+                    serializer.data, status=status.HTTP_201_CREATED
+                )
             except ObjectDoesNotExist:
                 return Response(
                     "Пользователя с таким id нет.",
@@ -125,7 +110,9 @@ class RecipeViewSet(ModelViewSet):
     def shopping_cart(self, request, pk):
         user = request.user.id
         data = {"user": user, "recipe": pk}
-        serializer = ShoppingcartSerializer(data=data, context={"request": request})
+        serializer = ShoppingcartSerializer(
+            data=data, context={"request": request}
+        )
         serializer.is_valid(raise_exception=True)
 
         if self.request.method == "POST":
@@ -157,7 +144,9 @@ class RecipeViewSet(ModelViewSet):
     def favorite(self, request, pk):
         user = request.user.id
         data = {"user": user, "recipe": pk}
-        serializer = FavoriteSerializer(data=data, context={"request": request})
+        serializer = FavoriteSerializer(
+            data=data, context={"request": request}
+        )
         serializer.is_valid(raise_exception=True)
 
         if self.request.method == "POST":
