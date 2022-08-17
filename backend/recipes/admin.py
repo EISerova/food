@@ -11,6 +11,8 @@ from .models import (
     ShoppingCart,
 )
 
+EMPTY_VALUE_DISPLAY = "-пусто-"
+
 
 @admin.register(User)
 class UserClass(admin.ModelAdmin):
@@ -48,30 +50,29 @@ class UserClass(admin.ModelAdmin):
         "email",
     )
     ordering = ("-create_at",)
-    empty_value_display = "-пусто-"
+    empty_value_display = EMPTY_VALUE_DISPLAY
 
 
 @admin.register(Ingredient)
 class IngredientClass(admin.ModelAdmin):
-    """Админка юзеров."""
+    """Админка ингредиентов."""
 
     list_display = (
         "id",
         "name",
         "measurement_unit",
     )
-    list_filter = ("measurement_unit",)
+    list_filter = (
+        "name",
+        "measurement_unit",
+    )
     list_editable = (
         "name",
         "measurement_unit",
     )
-    search_fields = (
-        "id",
-        "name",
-        "measurement_unit",
-    )
-    ordering = ("-id",)
-    empty_value_display = "-пусто-"
+    search_fields = ("name",)
+    ordering = ("id",)
+    empty_value_display = EMPTY_VALUE_DISPLAY
 
 
 @admin.register(Tag)
@@ -90,13 +91,9 @@ class TagClass(admin.ModelAdmin):
         "color",
         "slug",
     )
-    search_fields = (
-        "id",
-        "name",
-        "slug",
-    )
-    ordering = ("-id",)
-    empty_value_display = "-пусто-"
+    search_fields = ("name",)
+    ordering = ("id",)
+    empty_value_display = EMPTY_VALUE_DISPLAY
 
 
 @admin.register(Recipe)
@@ -109,10 +106,16 @@ class RecipeClass(admin.ModelAdmin):
         "image",
         "cooking_time",
         "author",
+        "_get_adding_to_favourite",
     )
-    list_filter = ("author", "name")
+    list_filter = (
+        "author",
+        "name",
+        "tags",
+    )
     ordering = ("-id",)
-    empty_value_display = "-пусто-"
+    search_fields = ("name",)
+    empty_value_display = EMPTY_VALUE_DISPLAY
 
 
 @admin.register(IngredientRecipe)
@@ -125,5 +128,58 @@ class IngredientRecipeClass(admin.ModelAdmin):
         "recipe",
         "amount",
     )
+    list_filter = (
+        "ingredient",
+        "recipe",
+        "amount",
+    )
     ordering = ("-recipe",)
-    empty_value_display = "-пусто-"
+    empty_value_display = EMPTY_VALUE_DISPLAY
+
+
+@admin.register(Follow)
+class FollowClass(admin.ModelAdmin):
+    """Админка подписок на авторов."""
+
+    list_display = (
+        "id",
+        "user",
+        "author",
+    )
+    list_filter = (
+        "user",
+        "author",
+    )
+    ordering = ("-id",)
+    empty_value_display = EMPTY_VALUE_DISPLAY
+
+
+@admin.register(Favorite)
+class FavoriteClass(admin.ModelAdmin):
+    """Админка избранных рецептов."""
+
+    list_display = (
+        "id",
+        "user",
+        "recipe",
+    )
+    list_filter = (
+        "user",
+        "id",
+    )
+    ordering = ("-id",)
+    empty_value_display = EMPTY_VALUE_DISPLAY
+
+
+@admin.register(ShoppingCart)
+class ShoppingCartClass(admin.ModelAdmin):
+    """Админка списка покупок."""
+
+    list_display = (
+        "id",
+        "user",
+        "recipe",
+    )
+    list_filter = ("user", "recipe")
+    ordering = ("-id",)
+    empty_value_display = EMPTY_VALUE_DISPLAY

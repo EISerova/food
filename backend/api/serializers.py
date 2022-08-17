@@ -2,8 +2,15 @@ from django.shortcuts import get_object_or_404
 from djoser.serializers import UserCreateSerializer, UserSerializer
 from drf_extra_fields.fields import Base64ImageField
 from foodgram.settings import RECIPE_FIELD_RESPONSE, USER_FIELD_RESPONSE
-from recipes.models import (Favorite, Follow, Ingredient, IngredientRecipe,
-                            Recipe, ShoppingCart, Tag)
+from recipes.models import (
+    Favorite,
+    Follow,
+    Ingredient,
+    IngredientRecipe,
+    Recipe,
+    ShoppingCart,
+    Tag,
+)
 from rest_framework import serializers
 from users.models import User
 
@@ -286,6 +293,7 @@ class RecipeListSerializer(serializers.ModelSerializer):
             "id",
             "is_favorited",
             "is_in_shopping_cart",
+            "ingredients",
         )
         depth = 1
 

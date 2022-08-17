@@ -77,6 +77,11 @@ class Recipe(models.Model):
     def __str__(self):
         return f"Рецепт - {self.name}"
 
+    def _get_adding_to_favourite(self):
+        return self.favorites.count()
+
+    _get_adding_to_favourite.short_description = "добавлено в избранное"
+
 
 class IngredientRecipe(models.Model):
     """Рецепт."""
@@ -91,6 +96,7 @@ class IngredientRecipe(models.Model):
 
     class Meta:
         verbose_name = "Ингредиенты рецепта"
+        verbose_name_plural = "Ингредиенты рецепта"
 
     def __str__(self):
         return f"Рецепт - {self.recipe}, ингредиент - {self.ingredient}"
@@ -110,6 +116,8 @@ class Follow(models.Model):
     )
 
     class Meta:
+        verbose_name = "Подписка"
+        verbose_name_plural = "Подписки"
         constraints = [
             models.UniqueConstraint(
                 fields=["user", "author"], name="follower_author_connection"
@@ -130,9 +138,12 @@ class Favorite(models.Model):
     )
 
     class Meta:
+        verbose_name = "Избранный рецепт"
+        verbose_name_plural = "Избранные рецепты"
         constraints = [
             models.UniqueConstraint(
-                fields=["user", "recipe"], name="user_recipe_connection"
+                fields=["user", "recipe"],
+                name="user_favorite_recipe_connection",
             )
         ]
 
@@ -148,3 +159,12 @@ class ShoppingCart(models.Model):
     recipe = models.ForeignKey(
         Recipe, on_delete=models.CASCADE, related_name="cart"
     )
+
+    class Meta:
+        verbose_name = "Список покупок"
+        verbose_name_plural = "Списки покупок"
+        constraints = [
+            models.UniqueConstraint(
+                fields=["user", "recipe"], name="user_shopping_cart_connection"
+            )
+        ]
