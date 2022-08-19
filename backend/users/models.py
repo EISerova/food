@@ -16,7 +16,9 @@ class User(AbstractUser):
     )
     first_name = models.CharField("Имя", max_length=150)
     last_name = models.CharField("Фамилия", max_length=150)
-    email = models.EmailField("Почта", max_length=254, unique=True, db_index=True)
+    email = models.EmailField(
+        "Почта", max_length=254, unique=True, db_index=True
+    )
     password = models.CharField("Пароль", max_length=150)
     create_at = models.DateTimeField("Дата регистрации", auto_now_add=True)
 

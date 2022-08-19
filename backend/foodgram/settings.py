@@ -159,16 +159,13 @@ REST_FRAMEWORK = {
         "rest_framework.authentication.TokenAuthentication",
     ),
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.LimitOffsetPagination",
-    "PAGE_SIZE": 10,
+    "PAGE_SIZE": 6,
 }
 
 
 # Кастомные переменные
 
 MIN_COOKING_TIME = 1
-TAG_SLUG_LENGTH_ERROR = (
-    "Разрешены латинские буквы и цифры. Не более 200 символов"
-)
 USER_FIELD_RESPONSE = (
     "email",
     "id",
@@ -182,3 +179,13 @@ RECIPE_FIELD_RESPONSE = (
     "image",
     "cooking_time",
 )
+
+USER_NOT_EXIST_ERROR = "Пользователь не существует."
+TAG_SLUG_LENGTH_ERROR = (
+    "Разрешены латинские буквы и цифры. Не более 200 символов"
+)
+SUBSCRIBING_NOT_EXIST_ERROR = "Вы не подписаны на этого пользователя."
+RECIPE_ADD_IN_CART_ERROR = "Этот рецепт уже добавлен в список покупок."
+RECIPE_DELETE_FROM_CART_ERROR = "Этого рецепта нет в вашем списке покупок."
+RECIPE_ADD_IN_FAVORITE_ERROR = "Этот рецепт уже добавлен в избранное."
+RECIPE_DELETE_FROM_FAVORITE_ERROR = "Этот рецепт не добавлен в избранное."

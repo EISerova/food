@@ -1,25 +1,44 @@
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Sum
-from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from djoser.views import UserViewSet
-from recipes.models import (Favorite, Follow, Ingredient, IngredientRecipe,
-                            Recipe, ShoppingCart, Tag)
-from rest_framework import (authentication, filters, mixins, permissions,
-                            status, viewsets)
+from recipes.models import (
+    Favorite,
+    Follow,
+    Ingredient,
+    IngredientRecipe,
+    Recipe,
+    ShoppingCart,
+    Tag,
+)
+from rest_framework import filters, status
 from rest_framework.decorators import action
-from rest_framework.permissions import (AllowAny, IsAuthenticated,
-                                        IsAuthenticatedOrReadOnly)
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 from users.models import User
 
 from .filter import RecipeListFilter
-from .serializers import (CustomUserSerializer, FavoriteSerializer,
-                          FollowSerializer, IngredientSerializer,
-                          RecipeCreateSeializer, RecipeListSerializer,
-                          ShoppingcartSerializer, TagSerializer)
+from .serializers import (
+    CustomUserSerializer,
+    FavoriteSerializer,
+    FollowSerializer,
+    IngredientSerializer,
+    RecipeCreateSeializer,
+    RecipeListSerializer,
+    ShoppingcartSerializer,
+    TagSerializer,
+)
 from .utils import generate_pdf
+
+from foodgram.settings import (
+    USER_NOT_EXIST_ERROR,
+    SUBSCRIBING_NOT_EXIST_ERROR,
+    RECIPE_ADD_IN_CART_ERROR,
+    RECIPE_DELETE_FROM_CART_ERROR,
+    RECIPE_ADD_IN_FAVORITE_ERROR,
+    RECIPE_DELETE_FROM_FAVORITE_ERROR,
+)
 
 
 class CustomUserViewSet(UserViewSet):
@@ -43,7 +62,7 @@ class CustomUserViewSet(UserViewSet):
                 )
             except ObjectDoesNotExist:
                 return Response(
-                    "Пользователя с таким id нет.",
+                    USER_NOT_EXIST_ERROR,
                     status=status.HTTP_400_BAD_REQUEST,
                 )
 
@@ -54,18 +73,18 @@ class CustomUserViewSet(UserViewSet):
                 return Response(status=status.HTTP_204_NO_CONTENT)
             except ObjectDoesNotExist:
                 return Response(
-                    "Вы не подписаны на этого пользователя.",
+                    SUBSCRIBING_NOT_EXIST_ERROR,
                     status=status.HTTP_400_BAD_REQUEST,
                 )
 
     @action(methods=["GET"], url_path="subscriptions", detail=False)
     def subscriptions(self, request):
-        user = request.user
-        data = User.objects.filter(following__user=user)
+        data = User.objects.filter(following__user=request.user)
         pages = self.paginate_queryset(data)
         serializer = CustomUserSerializer(
             pages, many=True, context={"request": request}
         )
+        serializer.is_valid(raise_exception=True)
         return self.get_paginated_response(serializer.data)
 
 
@@ -118,7 +137,7 @@ class RecipeViewSet(ModelViewSet):
         if self.request.method == "POST":
             if ShoppingCart.objects.filter(user=user, recipe=pk).exists():
                 return Response(
-                    "Этот рецепт уже добавлен в список покупок.",
+                    RECIPE_ADD_IN_CART_ERROR,
                     status=status.HTTP_400_BAD_REQUEST,
                 )
             serializer.save()
@@ -131,7 +150,7 @@ class RecipeViewSet(ModelViewSet):
                 return Response(status=status.HTTP_204_NO_CONTENT)
             except ObjectDoesNotExist:
                 return Response(
-                    "Этого рецепта нет в вашем списке покупок",
+                    RECIPE_DELETE_FROM_CART_ERROR,
                     status=status.HTTP_400_BAD_REQUEST,
                 )
 
@@ -152,7 +171,7 @@ class RecipeViewSet(ModelViewSet):
         if self.request.method == "POST":
             if Favorite.objects.filter(user=user, recipe=pk).exists():
                 return Response(
-                    "Этот рецепт уже добавлен в избранное.",
+                    RECIPE_ADD_IN_FAVORITE_ERROR,
                     status=status.HTTP_400_BAD_REQUEST,
                 )
             serializer.save()
@@ -165,7 +184,7 @@ class RecipeViewSet(ModelViewSet):
                 return Response(status=status.HTTP_204_NO_CONTENT)
             except ObjectDoesNotExist:
                 return Response(
-                    "Этот рецепт не добавлен в избранное.",
+                    RECIPE_DELETE_FROM_FAVORITE_ERROR,
                     status=status.HTTP_400_BAD_REQUEST,
                 )
 
@@ -178,9 +197,6 @@ class FavoriteViewSet(ModelViewSet):
     def get_queryset(self):
         user = self.request.user
         return Favorite.objects.filter(user=user)
-
-
-###########################ГОТОВО###############################
 
 
 class IngredientViewSet(ReadOnlyModelViewSet):

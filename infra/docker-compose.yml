@@ -13,8 +13,8 @@ services:
     build:
       context: ../backend
       dockerfile: Dockerfile
-    environment:
-      - DB_HOST=db
+    # environment:
+    #   - DB_HOST=db
     volumes:
       - static_value:/app/static/
       - media_value:/app/media/
@@ -57,5 +57,3 @@ volumes:
   static_value:
   media_value:
   postgres_data:
-
-
