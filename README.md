@@ -1,18 +1,17 @@
 # Foodgram - домашний кулинар.
-
-**Foodgram** - сервис для поиска вкусных рецептов. Он также составит для Вас список покупок, необходимых для готовки. А если Вы хотите похвалиться любимых бабушкиным рецептом, то можете его опубликовать Foodgram и получить признание от подписчиков.
 ![DjangoREST](https://img.shields.io/badge/-Django-green) ![Docker](https://img.shields.io/badge/-Docker-yellowgreen) ![Nginx](https://img.shields.io/badge/-Nginx-lightgrey)
 
+**Foodgram** - сервис для поиска вкусных рецептов. Он также составит для Вас список покупок, необходимых для готовки. А если Вы хотите похвалиться любимых бабушкиным рецептом, то можете его опубликовать Foodgram и получить признание от подписчиков.
 
 ### Запуск проекта в Docker
 
 Настройки базы по умолчанию:
-ENGINE = django.db.backends.postgresql_psycopg2
-NAME = postgres
-USER = postgres
-PASSWORD = postgres
-HOST = foodgram_db
-PORT = 5432
+* ENGINE = django.db.backends.postgresql_psycopg2
+* NAME = postgres
+* USER = postgres
+* PASSWORD = postgres
+* HOST = foodgram_db
+* PORT = 5432
 
 Запустить контейнер
 ```
@@ -40,5 +39,3 @@ python manage.py collectstatic
 
 Лицензия:
 [MIT](https://choosealicense.com/licenses/mit/)
-
-#### Получение списка всех произведений
