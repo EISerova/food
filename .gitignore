@@ -135,4 +135,4 @@ cython_debug/
 
 .DS_store
 
-.media
+media/
