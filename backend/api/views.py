@@ -19,6 +19,7 @@ from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 from users.models import User
 
 from .filter import RecipeListFilter
+from .permissions import IsAuthorOrReadOnly
 from .serializers import (
     CustomUserSerializer,
     FavoriteSerializer,
@@ -95,6 +96,7 @@ class RecipeViewSet(ModelViewSet):
     filter_backends = (DjangoFilterBackend,)
     filter_class = RecipeListFilter
     filterset_fields = ["author", "tags"]
+    permission_classes = (IsAuthorOrReadOnly,)
 
     def perform_create(self, serializer):
         """Создает рецепт."""

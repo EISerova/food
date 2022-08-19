@@ -9,12 +9,8 @@ services:
       - ./.env
     restart: always
   web:
+    image: katyaserova/foodgram_backend:v1
     container_name: foodgram
-    build:
-      context: ../backend
-      dockerfile: Dockerfile
-    # environment:
-    #   - DB_HOST=db
     volumes:
       - static_value:/app/static/
       - media_value:/app/media/
