@@ -9,7 +9,7 @@ services:
       - ./.env
     restart: always
   web:
-    image: katyaserova/foodgram_backend:v1
+    image: katyaserova/foodgram_backend:v3
     container_name: foodgram
     volumes:
       - static_value:/app/static/

@@ -1,7 +1,7 @@
 from django.core.validators import MinValueValidator, RegexValidator
 from django.db import models
-from foodgram.settings import MIN_COOKING_TIME, TAG_SLUG_LENGTH_ERROR
 
+from foodgram.settings import MIN_COOKING_TIME, TAG_SLUG_LENGTH_ERROR
 from users.models import User
 
 
@@ -60,7 +60,10 @@ class Recipe(models.Model):
         validators=[MinValueValidator(MIN_COOKING_TIME)],
     )
     author = models.ForeignKey(
-        User, on_delete=models.CASCADE, verbose_name="Автор"
+        User,
+        on_delete=models.CASCADE,
+        related_name="recipes",
+        verbose_name="Автор",
     )
     ingredients = models.ManyToManyField(
         Ingredient,
@@ -97,6 +100,12 @@ class IngredientRecipe(models.Model):
     class Meta:
         verbose_name = "Ингредиенты рецепта"
         verbose_name_plural = "Ингредиенты рецепта"
+        constraints = [
+            models.UniqueConstraint(
+                fields=["ingredient", "recipe"],
+                name="follower_ingredient_recipe",
+            )
+        ]
 
     def __str__(self):
         return f"Рецепт - {self.recipe}, ингредиент - {self.ingredient}"

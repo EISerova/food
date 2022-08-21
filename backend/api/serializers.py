@@ -1,7 +1,15 @@
 from django.shortcuts import get_object_or_404
-from djoser.serializers import UserCreateSerializer
+from rest_framework import serializers
+
 from drf_extra_fields.fields import Base64ImageField
-from foodgram.settings import RECIPE_FIELD_RESPONSE, USER_FIELD_RESPONSE
+from djoser.serializers import UserCreateSerializer
+
+from foodgram.settings import (
+    DOUBLE_INGREDIENT_ADD_ERROR,
+    DOUBLE_TAGS_ADD_ERROR,
+    RECIPE_FIELD_RESPONSE,
+    USER_FIELD_RESPONSE,
+)
 from recipes.models import (
     Favorite,
     Follow,
@@ -11,7 +19,6 @@ from recipes.models import (
     ShoppingCart,
     Tag,
 )
-from rest_framework import serializers
 from users.models import User
 
 
@@ -45,16 +52,14 @@ class BaseRecipeSerializer(serializers.ModelSerializer):
         fields = RECIPE_FIELD_RESPONSE + ("id",)
 
 
-class FollowRepresentationSerializer(serializers.ModelSerializer):
-    """Выводит поля для сериализатора FollowSerializer."""
-
-    is_subscribed = serializers.SerializerMethodField(
-        method_name="get_is_subscribed"
-    )
-    recipes = serializers.SerializerMethodField(method_name="get_recipes")
+class FollowRepresentationSerializer(CustomUserSerializer):
+    recipes = BaseRecipeSerializer(many=True)
     recipes_count = serializers.SerializerMethodField(
         method_name="get_recipes_count"
     )
+
+    def get_recipes_count(self, obj):
+        return Recipe.objects.filter(author=obj).count()
 
     class Meta:
         model = User
@@ -63,17 +68,7 @@ class FollowRepresentationSerializer(serializers.ModelSerializer):
             "recipes",
             "recipes_count",
         )
-
-    def get_is_subscribed(self, obj):
-        user = self.context.get("request").user.id
-        return Follow.objects.filter(user=user, author=obj).exists()
-
-    def get_recipes(self, obj):
-        recipes = Recipe.objects.filter(author=obj)
-        return BaseRecipeSerializer(recipes, many=True).data
-
-    def get_recipes_count(self, obj):
-        return Recipe.objects.filter(author=obj).count()
+        depth = 2
 
 
 class FollowSerializer(serializers.ModelSerializer):
@@ -84,13 +79,6 @@ class FollowSerializer(serializers.ModelSerializer):
     class Meta:
         model = Follow
         fields = "__all__"
-
-    def create(self, validated_data):
-        try:
-            following = Follow.objects.create(**validated_data)
-        except Exception as error:
-            raise serializers.ValidationError({"detail": error})
-        return following
 
     def to_representation(self, instance):
         context = {"request": self.context.get("request")}
@@ -182,23 +170,40 @@ class RecipeCreateSeializer(serializers.ModelSerializer):
             "author",
         )
 
+    def validate_tags(self, value):
+        removing_double = set(value)
+        if len(value) > len(removing_double):
+            raise serializers.ValidationError(
+                {"detail": DOUBLE_TAGS_ADD_ERROR}
+            )
+        return value
+
+    def validate(self, data):
+        ingredients_ids = set()
+        for ingredient in data["ingredients"]:
+            ingredients_ids.add(ingredient["id"])
+        if len(data["ingredients"]) > len(ingredients_ids):
+            raise serializers.ValidationError(
+                {"detail": DOUBLE_INGREDIENT_ADD_ERROR}
+            )
+        return data
+
+    def create_recipe_ingredients(self, new_recipe, recipe_ingredients):
+        IngredientRecipe.objects.bulk_create(
+            IngredientRecipe(
+                recipe=new_recipe,
+                amount=ingredient["amount"],
+                ingredient_id=ingredient["id"],
+            )
+            for ingredient in recipe_ingredients
+        )
+
     def create(self, validated_data):
         recipe_tags = validated_data.pop("tags")
         recipe_ingredients = validated_data.pop("ingredients")
-        try:
-            new_recipe = Recipe.objects.create(**validated_data)
-            new_recipe.tags.set(recipe_tags)
-        except Exception as error:
-            raise serializers.ValidationError({"detail": error})
-        for ingredient in recipe_ingredients:
-            try:
-                IngredientRecipe.objects.create(
-                    recipe=new_recipe,
-                    amount=ingredient["amount"],
-                    ingredient_id=ingredient["id"],
-                )
-            except Exception as error:
-                raise serializers.ValidationError({"detail": error})
+        new_recipe = Recipe.objects.create(**validated_data)
+        new_recipe.tags.set(recipe_tags)
+        self.create_recipe_ingredients(new_recipe, recipe_ingredients)
         return new_recipe
 
     def update(self, instance, validated_data):
@@ -221,14 +226,9 @@ class RecipeCreateSeializer(serializers.ModelSerializer):
         return instance
 
     def to_representation(self, instance):
-        try:
-            representation = RepresentationRecipeCreateSerializer(
-                instance, context={"request": self.context.get("request")}
-            )
-
-        except Exception as error:
-            raise serializers.ValidationError({"detail": error})
-
+        representation = RepresentationRecipeCreateSerializer(
+            instance, context={"request": self.context.get("request")}
+        )
         return representation.data
 
 

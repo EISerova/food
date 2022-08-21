@@ -53,4 +53,3 @@ asgiref==3.2.10
 pillow==9.0.0
 reportlab==3.6.11
 fpdf2==2.5.5
-fpdf==1.7.2

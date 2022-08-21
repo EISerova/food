@@ -1,7 +1,5 @@
-import mimetypes
 import os
 from pathlib import Path
-
 from django.core.exceptions import ImproperlyConfigured
 from dotenv import load_dotenv
 
@@ -20,14 +18,10 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
-# SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
 
-
-# Application definition
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -78,10 +72,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "foodgram.wsgi.application"
 
-
-# Database
-# https://docs.djangoproject.com/en/4.0/ref/settings/#databases
-
 DATABASES = {
     "default": {
         "ENGINE": os.getenv(
@@ -94,9 +84,6 @@ DATABASES = {
         "PORT": os.getenv("DB_PORT", default=5432),
     }
 }
-
-# Password validation
-# https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -189,3 +176,5 @@ RECIPE_ADD_IN_CART_ERROR = "Этот рецепт уже добавлен в с�
 RECIPE_DELETE_FROM_CART_ERROR = "Этого рецепта нет в вашем списке покупок."
 RECIPE_ADD_IN_FAVORITE_ERROR = "Этот рецепт уже добавлен в избранное."
 RECIPE_DELETE_FROM_FAVORITE_ERROR = "Этот рецепт не добавлен в избранное."
+DOUBLE_INGREDIENT_ADD_ERROR = "Вы добавили два одинаковых ингредиента."
+DOUBLE_TAGS_ADD_ERROR = "Вы добавили два одинаковых тега."
