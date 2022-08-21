@@ -1,6 +1,5 @@
 from django.contrib import admin
 
-from users.models import User
 from .models import (
     Favorite,
     Follow,
@@ -10,6 +9,7 @@ from .models import (
     ShoppingCart,
     Tag,
 )
+from users.models import User
 
 EMPTY_VALUE_DISPLAY = "-пусто-"
 
