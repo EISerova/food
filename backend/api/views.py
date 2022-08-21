@@ -139,25 +139,19 @@ class RecipeViewSet(ModelViewSet):
         serializer.is_valid(raise_exception=True)
         obj = model.objects.get(user=user, recipe=pk)
 
-        if self.request.method == "POST":
-            if model.objects.filter(user=user, recipe=pk).exists():
-                return Response(
-                    error_text_create,
-                    status=status.HTTP_400_BAD_REQUEST,
-                )
+        if request.method == "GET":
+            if obj:
+                data = {"errors": error_text_create}
+                return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-        if self.request.method == "DELETE":
-            if obj:
-                obj.delete()
-                return Response(status=status.HTTP_204_NO_CONTENT)
-            return Response(
-                error_text_delete,
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-            # obj.delete()
-            # return Response(status=status.HTTP_204_NO_CONTENT)
+        elif request.method == "DELETE":
+            if not obj:
+                data = {"errors": error_text_delete}
+                return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
+            obj.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
 
     @action(
         detail=True,
