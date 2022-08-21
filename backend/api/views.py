@@ -1,14 +1,23 @@
 from django.db.models import Sum
 from django_filters.rest_framework import DjangoFilterBackend
 from djoser.views import UserViewSet
-from foodgram.settings import (RECIPE_ADD_IN_CART_ERROR,
-                               RECIPE_ADD_IN_FAVORITE_ERROR,
-                               RECIPE_DELETE_FROM_CART_ERROR,
-                               RECIPE_DELETE_FROM_FAVORITE_ERROR,
-                               SUBSCRIBING_NOT_EXIST_ERROR,
-                               USER_NOT_EXIST_ERROR)
-from recipes.models import (Favorite, Follow, Ingredient, IngredientRecipe,
-                            Recipe, ShoppingCart, Tag)
+from foodgram.settings import (
+    RECIPE_ADD_IN_CART_ERROR,
+    RECIPE_ADD_IN_FAVORITE_ERROR,
+    RECIPE_DELETE_FROM_CART_ERROR,
+    RECIPE_DELETE_FROM_FAVORITE_ERROR,
+    SUBSCRIBING_NOT_EXIST_ERROR,
+    USER_NOT_EXIST_ERROR,
+)
+from recipes.models import (
+    Favorite,
+    Follow,
+    Ingredient,
+    IngredientRecipe,
+    Recipe,
+    ShoppingCart,
+    Tag,
+)
 from rest_framework import filters, status
 from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny, IsAuthenticated
@@ -18,11 +27,17 @@ from users.models import User
 
 from .filter import RecipeListFilter
 from .permissions import IsAuthorOrReadOnly
-from .serializers import (CustomUserSerializer, FavoriteSerializer,
-                          FollowRepresentationSerializer, FollowSerializer,
-                          IngredientSerializer, RecipeCreateSeializer,
-                          RecipeListSerializer, ShoppingcartSerializer,
-                          TagSerializer)
+from .serializers import (
+    CustomUserSerializer,
+    FavoriteSerializer,
+    FollowRepresentationSerializer,
+    FollowSerializer,
+    IngredientSerializer,
+    RecipeCreateSeializer,
+    RecipeListSerializer,
+    ShoppingcartSerializer,
+    TagSerializer,
+)
 from .utils import generate_pdf
 
 
