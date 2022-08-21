@@ -65,18 +65,16 @@ class CustomUserViewSet(UserViewSet):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-        elif self.request.method == "DELETE":
-            following = Follow.objects.get(user=request.user, author=id)
-            if following:
-                following.delete()
+        if self.request.method == "DELETE":
+            try:
+                following = Follow.objects.get(user=request.user, author=id)
+            except Follow.DoesNotExist:
                 return Response(
-                    DELETE_FOLLOWING_MESSAGE.format(author=author),
-                    status=status.HTTP_204_NO_CONTENT,
+                    SUBSCRIBING_NOT_EXIST_ERROR,
+                    status=status.HTTP_400_BAD_REQUEST,
                 )
-            return Response(
-                SUBSCRIBING_NOT_EXIST_ERROR,
-                status=status.HTTP_400_BAD_REQUEST,
-            )
+            following.delete()
+            return Response(DELETE_FOLLOWING_MESSAGE.format(author=author),  status=status.HTTP_204_NO_CONTENT)
 
     @action(methods=["GET"], url_path="subscriptions", detail=False)
     def subscriptions(self, request):
@@ -136,8 +134,9 @@ class RecipeViewSet(ModelViewSet):
         data = {"user": user, "recipe": pk}
         serializer = model_serializer(data=data, context={"request": request})
         serializer.is_valid(raise_exception=True)
+        obj = model.objects.get(user=user, recipe=pk)
 
-        if self.request.method == "POST":
+        if self.request.method == "POST" and:
             if model.objects.filter(user=user, recipe=pk).exists():
                 return Response(
                     error_text_create,
@@ -147,14 +146,15 @@ class RecipeViewSet(ModelViewSet):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
         if self.request.method == "DELETE":
-            obj = model.objects.get(user=user, recipe=pk)
             if obj:
                 obj.delete()
                 return Response(status=status.HTTP_204_NO_CONTENT)
             return Response(
-                error_text_delete,
-                status=status.HTTP_400_BAD_REQUEST,
-            )
+                    error_text_delete,
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+            # obj.delete()
+            # return Response(status=status.HTTP_204_NO_CONTENT)
 
     @action(
         detail=True,
