@@ -66,17 +66,16 @@ class CustomUserViewSet(UserViewSet):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
         if self.request.method == "DELETE":
-            try:
-                following = Follow.objects.get(user=request.user, author=id)
-            except Follow.DoesNotExist:
+            following = Follow.objects.get(user=request.user, author=id)
+            if following:
+                following.delete()
                 return Response(
-                    SUBSCRIBING_NOT_EXIST_ERROR,
-                    status=status.HTTP_400_BAD_REQUEST,
+                    DELETE_FOLLOWING_MESSAGE.format(author=author),
+                    status=status.HTTP_204_NO_CONTENT,
                 )
-            following.delete()
             return Response(
-                DELETE_FOLLOWING_MESSAGE.format(author=author),
-                status=status.HTTP_204_NO_CONTENT,
+                SUBSCRIBING_NOT_EXIST_ERROR,
+                status=status.HTTP_400_BAD_REQUEST,
             )
 
     @action(methods=["GET"], url_path="subscriptions", detail=False)
@@ -148,15 +147,14 @@ class RecipeViewSet(ModelViewSet):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
         if self.request.method == "DELETE":
-            try:
-                obj = model.objects.get(user=user, recipe=pk)
-            except model.DoesNotExist:
-                return Response(
-                    error_text_delete,
-                    status=status.HTTP_400_BAD_REQUEST,
-                )
-            obj.delete()
-            return Response(status=status.HTTP_204_NO_CONTENT)
+            obj = model.objects.get(user=user, recipe=pk)
+            if obj:
+                obj.delete()
+                return Response(status=status.HTTP_204_NO_CONTENT)
+            return Response(
+                error_text_delete,
+                status=status.HTTP_400_BAD_REQUEST,
+            )
 
     @action(
         detail=True,
