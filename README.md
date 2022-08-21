@@ -1,4 +1,5 @@
 # Foodgram - домашний кулинар.
+![example workflow](https://github.com/EISerova/foodgram-project-react/actions/workflows/main.yml/badge.svg)  
 ![DjangoREST](https://img.shields.io/badge/-Django-green) ![Docker](https://img.shields.io/badge/-Docker-yellowgreen) ![Nginx](https://img.shields.io/badge/-Nginx-lightgrey)
 
 **Foodgram** - сервис для поиска вкусных рецептов. Он также составит для Вас список покупок, необходимых для готовки. А если Вы хотите похвалиться любимых бабушкиным рецептом, то можете его опубликовать в Foodgram и получить признание от подписчиков.
