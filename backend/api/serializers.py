@@ -1,24 +1,12 @@
 from django.shortcuts import get_object_or_404
-from rest_framework import serializers
-
-from drf_extra_fields.fields import Base64ImageField
 from djoser.serializers import UserCreateSerializer
-
-from foodgram.settings import (
-    DOUBLE_INGREDIENT_ADD_ERROR,
-    DOUBLE_TAGS_ADD_ERROR,
-    RECIPE_FIELD_RESPONSE,
-    USER_FIELD_RESPONSE,
-)
-from recipes.models import (
-    Favorite,
-    Follow,
-    Ingredient,
-    IngredientRecipe,
-    Recipe,
-    ShoppingCart,
-    Tag,
-)
+from drf_extra_fields.fields import Base64ImageField
+from foodgram.settings import (DOUBLE_INGREDIENT_ADD_ERROR,
+                               DOUBLE_TAGS_ADD_ERROR, RECIPE_FIELD_RESPONSE,
+                               USER_FIELD_RESPONSE)
+from recipes.models import (Favorite, Follow, Ingredient, IngredientRecipe,
+                            Recipe, ShoppingCart, Tag)
+from rest_framework import serializers
 from users.models import User
 
 

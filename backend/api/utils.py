@@ -1,5 +1,4 @@
 from django.http import FileResponse
-
 from fpdf import FPDF
 
 

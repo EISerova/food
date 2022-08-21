@@ -4,7 +4,6 @@ import os
 from django.apps.registry import Apps
 from django.conf import settings
 from django.db import migrations
-
 from recipes.models import Ingredient, Tag
 
 DATA_DIR = os.path.join(settings.BASE_DIR.parent, "data")

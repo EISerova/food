@@ -1,5 +1,6 @@
 import os
 from pathlib import Path
+
 from django.core.exceptions import ImproperlyConfigured
 from dotenv import load_dotenv
 
