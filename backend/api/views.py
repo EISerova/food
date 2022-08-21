@@ -65,7 +65,7 @@ class CustomUserViewSet(UserViewSet):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-        if self.request.method == "DELETE":
+        elif self.request.method == "DELETE":
             following = Follow.objects.get(user=request.user, author=id)
             if following:
                 following.delete()
