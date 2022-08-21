@@ -74,7 +74,10 @@ class CustomUserViewSet(UserViewSet):
                     status=status.HTTP_400_BAD_REQUEST,
                 )
             following.delete()
-            return Response(DELETE_FOLLOWING_MESSAGE.format(author=author),  status=status.HTTP_204_NO_CONTENT)
+            return Response(
+                DELETE_FOLLOWING_MESSAGE.format(author=author),
+                status=status.HTTP_204_NO_CONTENT,
+            )
 
     @action(methods=["GET"], url_path="subscriptions", detail=False)
     def subscriptions(self, request):
@@ -136,7 +139,7 @@ class RecipeViewSet(ModelViewSet):
         serializer.is_valid(raise_exception=True)
         obj = model.objects.get(user=user, recipe=pk)
 
-        if self.request.method == "POST" and:
+        if self.request.method == "POST":
             if model.objects.filter(user=user, recipe=pk).exists():
                 return Response(
                     error_text_create,
@@ -150,9 +153,9 @@ class RecipeViewSet(ModelViewSet):
                 obj.delete()
                 return Response(status=status.HTTP_204_NO_CONTENT)
             return Response(
-                    error_text_delete,
-                    status=status.HTTP_400_BAD_REQUEST,
-                )
+                error_text_delete,
+                status=status.HTTP_400_BAD_REQUEST,
+            )
             # obj.delete()
             # return Response(status=status.HTTP_204_NO_CONTENT)
 
