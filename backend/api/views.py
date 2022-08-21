@@ -14,6 +14,7 @@ from foodgram.settings import (
     RECIPE_DELETE_FROM_FAVORITE_ERROR,
     SUBSCRIBING_NOT_EXIST_ERROR,
     USER_NOT_EXIST_ERROR,
+    DELETE_FOLLOWING_MESSAGE,
 )
 from .filter import RecipeListFilter
 from .permissions import IsAuthorOrReadOnly
@@ -73,7 +74,10 @@ class CustomUserViewSet(UserViewSet):
                     status=status.HTTP_400_BAD_REQUEST,
                 )
             following.delete()
-            return Response(status=status.HTTP_204_NO_CONTENT)
+            return Response(
+                DELETE_FOLLOWING_MESSAGE.format(author=author),
+                status=status.HTTP_204_NO_CONTENT,
+            )
 
     @action(methods=["GET"], url_path="subscriptions", detail=False)
     def subscriptions(self, request):

@@ -180,3 +180,4 @@ RECIPE_ADD_IN_FAVORITE_ERROR = "Этот рецепт уже добавлен в
 RECIPE_DELETE_FROM_FAVORITE_ERROR = "Этот рецепт не добавлен в избранное."
 DOUBLE_INGREDIENT_ADD_ERROR = "Вы добавили два одинаковых ингредиента."
 DOUBLE_TAGS_ADD_ERROR = "Вы добавили два одинаковых тега."
+DELETE_FOLLOWING_MESSAGE = "Вы отписались от пользователя {author}."
