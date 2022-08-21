@@ -1,6 +1,12 @@
 from django.db.models import Sum
 from django_filters.rest_framework import DjangoFilterBackend
 from djoser.views import UserViewSet
+from rest_framework import filters, status
+from rest_framework.decorators import action
+from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.response import Response
+from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
+
 from foodgram.settings import (
     RECIPE_ADD_IN_CART_ERROR,
     RECIPE_ADD_IN_FAVORITE_ERROR,
@@ -9,6 +15,8 @@ from foodgram.settings import (
     SUBSCRIBING_NOT_EXIST_ERROR,
     USER_NOT_EXIST_ERROR,
 )
+from .filter import RecipeListFilter
+from .permissions import IsAuthorOrReadOnly
 from recipes.models import (
     Favorite,
     Follow,
@@ -18,15 +26,6 @@ from recipes.models import (
     ShoppingCart,
     Tag,
 )
-from rest_framework import filters, status
-from rest_framework.decorators import action
-from rest_framework.permissions import AllowAny, IsAuthenticated
-from rest_framework.response import Response
-from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
-from users.models import User
-
-from .filter import RecipeListFilter
-from .permissions import IsAuthorOrReadOnly
 from .serializers import (
     CustomUserSerializer,
     FavoriteSerializer,
@@ -38,6 +37,7 @@ from .serializers import (
     ShoppingcartSerializer,
     TagSerializer,
 )
+from users.models import User
 from .utils import generate_pdf
 
 
@@ -146,13 +146,13 @@ class RecipeViewSet(ModelViewSet):
         if self.request.method == "DELETE":
             try:
                 obj = model.objects.get(user=user, recipe=pk)
-                obj.delete()
-                return Response(status=status.HTTP_204_NO_CONTENT)
             except model.DoesNotExist:
                 return Response(
                     error_text_delete,
                     status=status.HTTP_400_BAD_REQUEST,
                 )
+            obj.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
 
     @action(
         detail=True,

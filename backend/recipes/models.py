@@ -1,5 +1,6 @@
 from django.core.validators import MinValueValidator, RegexValidator
 from django.db import models
+
 from foodgram.settings import MIN_COOKING_TIME, TAG_SLUG_LENGTH_ERROR
 from users.models import User
 

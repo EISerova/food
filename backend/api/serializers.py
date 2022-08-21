@@ -1,6 +1,8 @@
 from django.shortcuts import get_object_or_404
 from djoser.serializers import UserCreateSerializer
 from drf_extra_fields.fields import Base64ImageField
+from rest_framework import serializers
+
 from foodgram.settings import (
     DOUBLE_INGREDIENT_ADD_ERROR,
     DOUBLE_TAGS_ADD_ERROR,
@@ -16,7 +18,6 @@ from recipes.models import (
     ShoppingCart,
     Tag,
 )
-from rest_framework import serializers
 from users.models import User
 
 
@@ -205,23 +206,11 @@ class RecipeCreateSeializer(serializers.ModelSerializer):
         return new_recipe
 
     def update(self, instance, validated_data):
-        instance.image = validated_data.get("image", instance.image)
-        instance.name = validated_data.get("name", instance.name)
-        instance.cooking_time = validated_data.get(
-            "cooking_time", instance.cooking_time
-        )
-        instance.tags.set(validated_data["tags"])
         prev_ingredients = IngredientRecipe.objects.filter(recipe=instance.id)
         prev_ingredients.delete()
         ingredients = validated_data.pop("ingredients")
-        for ingredient in ingredients:
-            IngredientRecipe.objects.get_or_create(
-                ingredient=get_object_or_404(Ingredient, id=ingredient["id"]),
-                amount=ingredient["amount"],
-                recipe=instance,
-            )
-        instance.save()
-        return instance
+        self.create_recipe_ingredients(instance, ingredients)
+        return super().update(instance, validated_data)
 
     def to_representation(self, instance):
         representation = RepresentationRecipeCreateSerializer(
