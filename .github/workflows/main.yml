@@ -83,8 +83,8 @@ jobs:
 
           # sudo docker pull katyaserova/foodgram_frontend:v1
           sudo docker pull katyaserova/foodgram_backend:latest
-          sudo docker-compose stop
-          sudo docker-compose rm web
+          # sudo docker-compose stop
+          # sudo docker-compose rm web
           sudo touch .env
           echo DB_ENGINE=${{ secrets.DB_ENGINE }} >> .env
           echo DB_NAME=${{ secrets.DB_NAME }} >> .env
@@ -93,5 +93,4 @@ jobs:
           echo DB_HOST=${{ secrets.DB_HOST }} >> .env
           echo DB_PORT=${{ secrets.DB_PORT }} >> .env
           echo SECRET_KEY=${{ secrets.SECRET_KEY }} >> .env
-          echo DEBUG=${{ secrets.DEBUG }} >> .env
           # sudo docker-compose up -d
