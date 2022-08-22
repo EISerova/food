@@ -70,7 +70,7 @@ jobs:
         passphrase: ${{ secrets.PASSPHRASE }}
         script: |
           sudo docker pull ${{ secrets.DOCKER_USERNAME }}/foodgram_backend:latest
-          sudo docker stop
+          sudo docker-compose stop
           sudo docker rm web
           sudo docker up -d
 
