@@ -70,6 +70,7 @@ jobs:
         passphrase: ${{ secrets.PASSPHRASE }}
         script: |
           cd ..
+          cd infra/
           sudo docker pull ${{ secrets.DOCKER_USERNAME }}/foodgram_backend:latest
           sudo docker-compose stop
           sudo docker-compose rm web
