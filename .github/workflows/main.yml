@@ -69,6 +69,7 @@ jobs:
         key: ${{ secrets.SSH_KEY }}
         passphrase: ${{ secrets.PASSPHRASE }}
         script: |
+          cd ..
           cd infra
           touch .env
           echo DB_ENGINE=${{ secrets.DB_ENGINE }} >> .env
