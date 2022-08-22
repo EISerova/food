@@ -69,6 +69,9 @@ jobs:
         key: ${{ secrets.SSH_KEY }}
         passphrase: ${{ secrets.PASSPHRASE }}
         script: |
-          cd infra
+          sudo docker pull katyaserova/foodgram_backend
+
+          sudo docker stop $(sudo docker ps -a -q)
+          sudo docker run --rm -d -p 5000:5000 katyaserova/foodgram_backend
 
 
