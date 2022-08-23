@@ -81,7 +81,7 @@ DATABASES = {
         ),
         "NAME": "postgresa",
         "USER": "postgresa",
-        "PASSWORD": "12345",
+        "PASSWORD": 12345,
         "HOST": "db",
         "PORT": 5432,
     }
