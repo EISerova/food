@@ -8,6 +8,8 @@ services:
     env_file:
       - ./.env
     restart: always
+    networks:
+      - foodgram
   web:
     image: katyaserova/foodgram_backend:latest
     container_name: foodgram
@@ -21,6 +23,8 @@ services:
     depends_on:
       - db
     restart: always
+    networks:
+      - foodgram
 
   frontend:
     build:
@@ -28,6 +32,8 @@ services:
       dockerfile: Dockerfile
     volumes:
       - ../frontend/:/app/result_build/
+    networks:
+      - foodgram
   nginx:
     image: nginx:1.19.3
     ports:
@@ -38,6 +44,8 @@ services:
       - ../docs/:/usr/share/nginx/html/api/docs/
       - static_value:/var/html/static/
       - media_value:/var/html/media/
+    networks:
+      - foodgram
   pgadmin:
     container_name: pgadmin4_container
     image: dpage/pgadmin4
@@ -48,8 +56,14 @@ services:
       - ./.env
     depends_on:
       - db
+    networks:
+      - foodgram
 
 volumes:
   static_value:
   media_value:
   postgres_data:
+
+
+networks:
+  foodgram:
