@@ -152,7 +152,7 @@ REST_FRAMEWORK = {
 }
 
 
-# Кастомные переменные
+# Кастомные переменные.
 
 MIN_COOKING_TIME = 1
 USER_FIELD_RESPONSE = (
