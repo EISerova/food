@@ -74,19 +74,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "foodgram.wsgi.application"
 
-# DATABASES = {
-#     "default": {
-#         "ENGINE": os.getenv(
-#             "DB_ENGINE", default="django.db.backends.postgresql"
-#         ),
-#         "NAME": "postgres",
-#         "USER": "postgres",
-#         "PASSWORD": 12345,
-#         "HOST": "db",
-#         "PORT": 5432,
-#     }
-# }
-
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
@@ -98,17 +85,6 @@ DATABASES = {
     }
 }
 
-
-# DATABASES = {
-#     "default": {
-#         "DB_ENGINE": "django.db.backends.postgresql",
-#         "DB_NAME": os.getenv("POSTGRES_DB", "postgres"),
-#         "POSTGRES_USER": os.getenv("POSTGRES_USER", "postgres"),
-#         "POSTGRES_PASSWORD": os.getenv("POSTGRES_PASSWORD", "12345"),
-#         "DB_HOST": os.getenv("POSTGRES_HOST", "db"),
-#         "DB_PORT": "5432",
-#     }
-# }
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -170,7 +146,7 @@ REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework.authentication.TokenAuthentication",
     ),
-    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.LimitOffsetPagination",
+    "DEFAULT_PAGINATION_CLASS": "api.pagination.CustomPageNumberPagination",
     "PAGE_SIZE": 6,
 }
 
