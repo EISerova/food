@@ -308,6 +308,7 @@ class RecipeListSerializer(serializers.ModelSerializer):
             "is_in_shopping_cart",
             "ingredients",
             "tags",
+            "text",
         )
         depth = 1
 
