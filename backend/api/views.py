@@ -1,4 +1,5 @@
 from django.db.models import Sum
+from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from djoser.views import UserViewSet
 from rest_framework import filters, status
@@ -8,10 +9,6 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 
 from foodgram.settings import (
-    RECIPE_ADD_IN_CART_ERROR,
-    RECIPE_ADD_IN_FAVORITE_ERROR,
-    RECIPE_DELETE_FROM_CART_ERROR,
-    RECIPE_DELETE_FROM_FAVORITE_ERROR,
     SUBSCRIBING_NOT_EXIST_ERROR,
     USER_NOT_EXIST_ERROR,
     DELETE_FOLLOWING_MESSAGE,
@@ -37,6 +34,7 @@ from .serializers import (
     RecipeListSerializer,
     ShoppingcartSerializer,
     TagSerializer,
+    BaseRecipeSerializer,
 )
 from users.models import User
 from .utils import generate_pdf
@@ -123,55 +121,22 @@ class RecipeViewSet(ModelViewSet):
         )
         return generate_pdf(ingredients_in_cart)
 
-    def base_shopping_cart_favorite(
-        self,
-        request,
-        pk,
-        model,
-        model_serializer,
-        error_text_create,
-        error_text_delete,
-    ):
-        """базовый метод для shopping_cart и favorite."""
-        user = request.user.id
-        data = {"user": user, "recipe": pk}
-        serializer = model_serializer(data=data, context={"request": request})
-        serializer.is_valid(raise_exception=True)
-        obj = model.objects.get(user=user, recipe=pk)
-
-        if self.request.method == "POST":
-            if obj:
-                return Response(
-                    error_text_create,
-                    status=status.HTTP_400_BAD_REQUEST,
-                )
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-
-        if self.request.method == "DELETE":
-            if not obj:
-                Response(
-                    error_text_delete,
-                    status=status.HTTP_400_BAD_REQUEST,
-                )
-            obj.delete()
-            return Response(status=status.HTTP_204_NO_CONTENT)
-
-    @action(
-        detail=True,
-        methods=("POST", "DELETE"),
-        url_path="shopping_cart",
-        permission_classes=(IsAuthenticated,),
-    )
-    def shopping_cart(self, request, pk):
-        return self.base_shopping_cart_favorite(
-            request,
-            pk,
-            model=ShoppingCart,
-            model_serializer=ShoppingcartSerializer,
-            error_text_create=RECIPE_ADD_IN_CART_ERROR,
-            error_text_delete=RECIPE_DELETE_FROM_CART_ERROR,
+    def base_shopping_cart_favorite(self, model, pk, serializer):
+        recipe = get_object_or_404(Recipe, id=pk)
+        serializer = serializer(
+            data={"user": self.request.user.id, "recipe": recipe.id},
+            context={"request": self.request},
         )
+        if self.request.method == "POST":
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+            serializer = BaseRecipeSerializer(recipe)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        object = model.objects.filter(user=self.request.user, recipe=recipe)
+        if not object.exists():
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        object.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
     @action(
         detail=True,
@@ -181,12 +146,18 @@ class RecipeViewSet(ModelViewSet):
     )
     def favorite(self, request, pk):
         return self.base_shopping_cart_favorite(
-            request,
-            pk,
-            model=Favorite,
-            model_serializer=FavoriteSerializer,
-            error_text_create=RECIPE_ADD_IN_FAVORITE_ERROR,
-            error_text_delete=RECIPE_DELETE_FROM_FAVORITE_ERROR,
+            Favorite, pk, FavoriteSerializer
+        )
+
+    @action(
+        detail=True,
+        methods=("POST", "DELETE"),
+        url_path="shopping_cart",
+        permission_classes=(IsAuthenticated,),
+    )
+    def shopping_cart(self, request, pk):
+        return self.base_shopping_cart_favorite(
+            ShoppingCart, pk, ShoppingcartSerializer
         )
 
 

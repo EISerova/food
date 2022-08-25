@@ -7,7 +7,10 @@ from foodgram.settings import (
     DOUBLE_TAGS_ADD_ERROR,
     RECIPE_FIELD_RESPONSE,
     USER_FIELD_RESPONSE,
+    RECIPE_ADD_IN_CART_ERROR,
+    RECIPE_ADD_IN_FAVORITE_ERROR,
 )
+
 from recipes.models import (
     Favorite,
     Follow,
@@ -96,6 +99,16 @@ class FavoriteSerializer(serializers.ModelSerializer):
         fields = "__all__"
         read_only_fields = ("recipe",)
 
+    def validate(self, data):
+        request = self.context.get("request")
+        if Favorite.objects.filter(
+            user=request.user, recipe=data["recipe"]
+        ).exists():
+            raise serializers.ValidationError(
+                {"detail": RECIPE_ADD_IN_FAVORITE_ERROR}
+            )
+        return data
+
     def to_representation(self, instance):
         context = {"request": self.context.get("request")}
         return BaseRecipeSerializer(instance.recipe, context=context).data
@@ -111,6 +124,16 @@ class ShoppingcartSerializer(serializers.ModelSerializer):
         model = ShoppingCart
         fields = "__all__"
         read_only_fields = ("recipe",)
+
+    def validate(self, data):
+        request = self.context.get("request")
+        if ShoppingCart.objects.filter(
+            user=request.user, recipe=data["recipe"]
+        ).exists():
+            raise serializers.ValidationError(
+                {"detail": RECIPE_ADD_IN_CART_ERROR}
+            )
+        return data
 
     def to_representation(self, instance):
         context = {"request": self.context.get("request")}
