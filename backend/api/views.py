@@ -84,7 +84,6 @@ class CustomUserViewSet(UserViewSet):
         serializer = FollowRepresentationSerializer(
             pages, many=True, context={"request": request}
         )
-        serializer.is_valid(raise_exception=True)
         return self.get_paginated_response(serializer.data)
 
 
