@@ -64,8 +64,11 @@ class CustomUserViewSet(UserViewSet):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
         if self.request.method == "DELETE":
+            author = User.objects.get(id=id)
             try:
-                following = Follow.objects.get(user=request.user, author=id)
+                following = Follow.objects.get(
+                    user=request.user, author=author
+                )
             except Follow.DoesNotExist:
                 return Response(
                     SUBSCRIBING_NOT_EXIST_ERROR,
