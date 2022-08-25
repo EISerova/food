@@ -18,11 +18,11 @@ admin
 ### Запуск проекта в Docker
 
 Настройки базы по умолчанию:
-* ENGINE = django.db.backends.postgresql_psycopg2
+* ENGINE = django.db.backends.postgresql
 * NAME = postgres
 * USER = postgres
-* PASSWORD = postgres
-* HOST = foodgram_db
+* PASSWORD = 12345
+* HOST = db
 * PORT = 5432
 
 Запустить контейнер
