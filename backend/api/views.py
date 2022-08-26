@@ -13,7 +13,7 @@ from foodgram.settings import (
     USER_NOT_EXIST_ERROR,
     DELETE_FOLLOWING_MESSAGE,
 )
-from .filter import RecipeListFilter
+from .filter import RecipeListFilter, IngredientSearchFilter
 from .permissions import IsAuthorOrReadOnly
 from recipes.models import (
     Favorite,
@@ -178,7 +178,7 @@ class IngredientViewSet(ReadOnlyModelViewSet):
 
     queryset = Ingredient.objects.all()
     serializer_class = IngredientSerializer
-    filter_backends = [filters.SearchFilter]
+    filter_backends = [IngredientSearchFilter]
     search_fields = ["^name"]
     permission_classes = (AllowAny,)
     pagination_class = None

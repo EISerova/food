@@ -54,10 +54,18 @@ class BaseRecipeSerializer(serializers.ModelSerializer):
 
 
 class FollowRepresentationSerializer(CustomUserSerializer):
-    recipes = BaseRecipeSerializer(many=True)
+    recipes = serializers.SerializerMethodField(method_name="get_recipes")
     recipes_count = serializers.SerializerMethodField(
         method_name="get_recipes_count"
     )
+
+    def get_recipes(self, obj):
+        request = self.context.get("request")
+        recipes = obj.recipes.all()
+        recipes_limit = request.query_params.get("recipes_limit")
+        if recipes_limit:
+            recipes = recipes[: int(recipes_limit)]
+        return BaseRecipeSerializer(recipes, many=True).data
 
     def get_recipes_count(self, obj):
         return Recipe.objects.filter(author=obj).count()
