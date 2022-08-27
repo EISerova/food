@@ -13,6 +13,9 @@ services:
   web:
     image: katyaserova/foodgram_backend:latest
     container_name: foodgram
+    build:
+      context: ../backend
+      dockerfile: Dockerfile
     volumes:
       - static_value:/app/static/
       - media_value:/app/media/
