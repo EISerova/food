@@ -13,7 +13,7 @@ app_name = "api"
 
 router = DefaultRouter()
 
-router.register(r"recipes", RecipeViewSet, basename="recipes")
+router.register(r"collect", RecipeViewSet, basename="collect")
 router.register(r"tags", TagViewSet, basename="tags")
 router.register(r"favorites", FavoriteViewSet, basename="favorites")
 router.register(r"users", CustomUserViewSet, basename="users")

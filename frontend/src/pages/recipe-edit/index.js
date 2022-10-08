@@ -8,27 +8,27 @@ import MetaTags from 'react-meta-tags'
 
 const RecipeEdit = ({ onItemDelete }) => {
   const { value, handleChange, setValue } = useTags()
-  const [ recipeName, setRecipeName ] = useState('')
+  const [recipeName, setRecipeName] = useState('')
 
-  const [ ingredientValue, setIngredientValue ] = useState({
+  const [ingredientValue, setIngredientValue] = useState({
     name: '',
     id: null,
     amount: '',
     measurement_unit: ''
   })
 
-  const [ recipeIngredients, setRecipeIngredients ] = useState([])
-  const [ recipeText, setRecipeText ] = useState('')
-  const [ recipeTime, setRecipeTime ] = useState(0)
-  const [ recipeFile, setRecipeFile ] = useState(null)
+  const [recipeIngredients, setRecipeIngredients] = useState([])
+  const [recipeText, setRecipeText] = useState('')
+  // const [recipeTime, setRecipeTime] = useState(0)
+  const [recipeFile, setRecipeFile] = useState(null)
   const [
     recipeFileWasManuallyChanged,
     setRecipeFileWasManuallyChanged
   ] = useState(false)
 
-  const [ ingredients, setIngredients ] = useState([])
-  const [ showIngredients, setShowIngredients ] = useState(false)
-  const [ loading, setLoading ] = useState(true)
+  const [ingredients, setIngredients] = useState([])
+  const [showIngredients, setShowIngredients] = useState(false)
+  const [loading, setLoading] = useState(true)
   const history = useHistory()
 
   useEffect(_ => {
@@ -52,22 +52,22 @@ const RecipeEdit = ({ onItemDelete }) => {
   const { id } = useParams()
   useEffect(_ => {
     if (value.length === 0 || !loading) { return }
-    api.getRecipe ({
+    api.getRecipe({
       recipe_id: id
     }).then(res => {
       const {
         image,
         tags,
-        cooking_time,
+        // cooking_time,
         name,
-        ingredients,
+        // ingredients,
         text
       } = res
       setRecipeText(text)
       setRecipeName(name)
-      setRecipeTime(cooking_time)
+      // setRecipeTime(cooking_time)
       setRecipeFile(image)
-      setRecipeIngredients(ingredients)
+      // setRecipeIngredients(ingredients)
 
 
       const tagsValueUpdated = value.map(item => {
@@ -77,38 +77,38 @@ const RecipeEdit = ({ onItemDelete }) => {
       setValue(tagsValueUpdated)
       setLoading(false)
     })
-    .catch(err => {
-      history.push('/recipes')
-    })
+      .catch(err => {
+        history.push('/collect')
+      })
   }, [value])
 
-  const handleIngredientAutofill = ({ id, name, measurement_unit }) => {
-    setIngredientValue({
-      ...ingredientValue,
-      id,
-      name,
-      measurement_unit
-    })
-  }
+  // const handleIngredientAutofill = ({ id, name, measurement_unit }) => {
+  //   setIngredientValue({
+  //     ...ingredientValue,
+  //     id,
+  //     name,
+  //     measurement_unit
+  //   })
+  // }
 
   const checkIfDisabled = () => {
     return recipeText === '' ||
-    recipeName === '' ||
-    recipeIngredients.length === 0 ||
-    value.filter(item => item.value).length === 0 ||
-    recipeTime === '' ||
-    recipeFile === '' ||
-    recipeFile === null
+      recipeName === ''
+    // recipeIngredients.length === 0 ||
+    // value.filter(item => item.value).length === 0 ||
+    // recipeTime === '' ||
+    // recipeFile === '' ||
+    // recipeFile === null
   }
 
   return <Main>
     <Container>
       <MetaTags>
-        <title>Редактирование рецепта</title>
-        <meta name="description" content="Продуктовый помощник - Редактирование рецепта" />
-        <meta property="og:title" content="Редактирование рецепта" />
+        <title>Редактирование поста</title>
+        <meta name="description" content="ZOV ZAO - Редактирование поста" />
+        <meta property="og:title" content="Редактирование поста" />
       </MetaTags>
-      <Title title='Редактирование рецепта' />
+      <Title title='Редактирование поста' />
       <Form
         className={styles.form}
         onSubmit={e => {
@@ -116,44 +116,44 @@ const RecipeEdit = ({ onItemDelete }) => {
           const data = {
             text: recipeText,
             name: recipeName,
-            ingredients: recipeIngredients.map(item => ({
-              id: item.id,
-              amount: item.amount
-            })),
+            // ingredients: recipeIngredients.map(item => ({
+            //   id: item.id,
+            //   amount: item.amount
+            // })),
             tags: value.filter(item => item.value).map(item => item.id),
-            cooking_time: recipeTime,
+            // cooking_time: recipeTime,
             image: recipeFile,
             recipe_id: id
           }
           api
             .updateRecipe(data, recipeFileWasManuallyChanged)
             .then(res => {
-              history.push(`/recipes/${id}`)
+              history.push(`/collect/${id}`)
             })
-            .catch(err => {
-              const { non_field_errors, ingredients, cooking_time } = err
-              console.log({  ingredients })
-              if (non_field_errors) {
-                return alert(non_field_errors.join(', '))
-              }
-              if (ingredients) {
-                return alert(`Ингредиенты: ${ingredients.filter(item => Object.keys(item).length).map(item => {
-                  const error = item[Object.keys(item)[0]]
-                  return error && error.join(' ,')
-                })[0]}`)
-              }
-              if (cooking_time) {
-                return alert(`Время готовки: ${cooking_time[0]}`)
-              }
-              const errors = Object.values(err)
-              if (errors) {
-                alert(errors.join(', '))
-              }
-            })
+          // .catch(err => {
+          //   const { non_field_errors, ingredients, cooking_time } = err
+          //   console.log({  ingredients })
+          //   if (non_field_errors) {
+          //     return alert(non_field_errors.join(', '))
+          //   }
+          //   if (ingredients) {
+          //     return alert(`Ингредиенты: ${ingredients.filter(item => Object.keys(item).length).map(item => {
+          //       const error = item[Object.keys(item)[0]]
+          //       return error && error.join(' ,')
+          //     })[0]}`)
+          //   }
+          //   if (cooking_time) {
+          //     return alert(`Время готовки: ${cooking_time[0]}`)
+          //   }
+          //   const errors = Object.values(err)
+          //   if (errors) {
+          //     alert(errors.join(', '))
+          //   }
+          // })
         }}
       >
         <Input
-          label='Название рецепта'
+          label='Название поста'
           onChange={e => {
             const value = e.target.value
             setRecipeName(value)
@@ -169,7 +169,7 @@ const RecipeEdit = ({ onItemDelete }) => {
           checkboxClassName={styles.checkboxGroupItem}
           handleChange={handleChange}
         />
-        <div className={styles.ingredients}>
+        {/* <div className={styles.ingredients}>
           <div className={styles.ingredientsInputs}>
             <Input
               label='Ингредиенты'
@@ -258,9 +258,9 @@ const RecipeEdit = ({ onItemDelete }) => {
             value={recipeTime}
           />
           <div className={styles.cookingTimeUnit}>мин.</div>
-        </div>
+        </div> */}
         <Textarea
-          label='Описание рецепта'
+          label='Описание'
           onChange={e => {
             const value = e.target.value
             setRecipeText(value)
@@ -290,7 +290,7 @@ const RecipeEdit = ({ onItemDelete }) => {
               api.deleteRecipe({ recipe_id: id })
                 .then(res => {
                   onItemDelete && onItemDelete()
-                  history.push('/recipes')
+                  history.push('/collect')
                 })
             }}
           >

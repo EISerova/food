@@ -8,21 +8,21 @@ import MetaTags from 'react-meta-tags'
 
 const RecipeCreate = ({ onEdit }) => {
   const { value, handleChange, setValue } = useTags()
-  const [ recipeName, setRecipeName ] = useState('')
+  const [recipeName, setRecipeName] = useState('')
   const history = useHistory()
-  const [ ingredientValue, setIngredientValue ] = useState({
+  const [ingredientValue, setIngredientValue] = useState({
     name: '',
     id: null,
     amount: '',
     measurement_unit: ''
   })
-  const [ recipeIngredients, setRecipeIngredients ] = useState([])
-  const [ recipeText, setRecipeText ] = useState('')
-  const [ recipeTime, setRecipeTime ] = useState('')
-  const [ recipeFile, setRecipeFile ] = useState(null)
+  const [recipeIngredients, setRecipeIngredients] = useState([])
+  const [recipeText, setRecipeText] = useState('')
+  // const [recipeTime, setRecipeTime] = useState('')
+  const [recipeFile, setRecipeFile] = useState(null)
 
-  const [ ingredients, setIngredients ] = useState([])
-  const [ showIngredients, setShowIngredients ] = useState(false)
+  const [ingredients, setIngredients] = useState([])
+  const [showIngredients, setShowIngredients] = useState(false)
   useEffect(_ => {
     if (ingredientValue.name === '') {
       return setIngredients([])
@@ -52,22 +52,22 @@ const RecipeCreate = ({ onEdit }) => {
 
   const checkIfDisabled = () => {
     return recipeText === '' ||
-    recipeName === '' ||
-    recipeIngredients.length === 0 ||
-    value.filter(item => item.value).length === 0 ||
-    recipeTime === '' ||
-    recipeFile === '' ||
-    recipeFile === null
+      recipeName === ''
+    // recipeIngredients.length === 0 ||
+    // value.filter(item => item.value).length === 0 ||
+    // recipeTime === ''
+    // recipeFile === '' ||
+    // recipeFile === null
   }
 
   return <Main>
     <Container>
       <MetaTags>
         <title>Создание рецепта</title>
-        <meta name="description" content="Продуктовый помощник - Создание рецепта" />
-        <meta property="og:title" content="Создание рецепта" />
+        <meta name="description" content="ZOV ZAO - Создание поста" />
+        <meta property="og:title" content="Создание поста" />
       </MetaTags>
-      <Title title='Создание рецепта' />
+      <Title title='Создание поста' />
       <Form
         className={styles.form}
         onSubmit={e => {
@@ -75,48 +75,48 @@ const RecipeCreate = ({ onEdit }) => {
           const data = {
             text: recipeText,
             name: recipeName,
-            ingredients: recipeIngredients.map(item => ({
-              id: item.id,
-              amount: item.amount
-            })),
+            // ingredients: recipeIngredients.map(item => ({
+            //   id: item.id,
+            //   amount: item.amount
+            // })),
             tags: value.filter(item => item.value).map(item => item.id),
-            cooking_time: recipeTime,
+            // cooking_time: recipeTime,
             image: recipeFile
           }
           api
-          .createRecipe(data)
-          .then(res => {
-            history.push(`/recipes/${res.id}`)
-          })
-          .catch(err => {
-            const { non_field_errors, ingredients, cooking_time } = err
-            if (non_field_errors) {
-              return alert(non_field_errors.join(', '))
-            }
-            if (ingredients) {
-              return alert(`Ингредиенты: ${ingredients.filter(item => Object.keys(item).length).map(item => {
-                const error = item[Object.keys(item)[0]]
-                return error && error.join(' ,')
-              })[0]}`)
-            }
-            if (cooking_time) {
-              return alert(`Время готовки: ${cooking_time[0]}`)
-            }
-            const errors = Object.values(err)
-            if (errors) {
-              alert(errors.join(', '))
-            }
-          })
+            .createRecipe(data)
+            .then(res => {
+              history.push(`/collect/${res.id}`)
+            })
+          // .catch(err => {
+          //   const { non_field_errors, ingredients } = err
+          //   if (non_field_errors) {
+          //     return alert(non_field_errors.join(', '))
+          //   }
+          // if (ingredients) {
+          //   return alert(`Ингредиенты: ${ingredients.filter(item => Object.keys(item).length).map(item => {
+          //     const error = item[Object.keys(item)[0]]
+          //     return error && error.join(' ,')
+          //   })[0]}`)
+          // }
+          // if (cooking_time) {
+          //   return alert(`Время готовки: ${cooking_time[0]}`)
+          // }
+          //   const errors = Object.values(err)
+          //   if (errors) {
+          //     alert(errors.join(', '))
+          //   }
+          // })
         }}
       >
         <Input
-          label='Название рецепта'
+          label='Название поста'
           onChange={e => {
             const value = e.target.value
             setRecipeName(value)
           }}
         />
-        <CheckboxGroup
+        {/* <CheckboxGroup
           label='Теги'
           values={value}
           className={styles.checkboxGroup}
@@ -124,8 +124,8 @@ const RecipeCreate = ({ onEdit }) => {
           tagsClassName={styles.checkboxGroupTags}
           checkboxClassName={styles.checkboxGroupItem}
           handleChange={handleChange}
-        />
-        <div className={styles.ingredients}>
+        /> */}
+        {/* <div className={styles.ingredients}>
           <div className={styles.ingredientsInputs}>
             <Input
               label='Ингредиенты'
@@ -201,8 +201,8 @@ const RecipeCreate = ({ onEdit }) => {
           >
             Добавить ингредиент
           </div>
-        </div>
-        <div className={styles.cookingTime}>
+        </div> */}
+        {/* <div className={styles.cookingTime}>
           <Input
             label='Время приготовления'
             className={styles.ingredientsTimeInput}
@@ -215,9 +215,9 @@ const RecipeCreate = ({ onEdit }) => {
             value={recipeTime}
           />
           <div className={styles.cookingTimeUnit}>мин.</div>
-        </div>
+        </div> */}
         <Textarea
-          label='Описание рецепта'
+          label='Текст'
           onChange={e => {
             const value = e.target.value
             setRecipeText(value)
@@ -235,7 +235,7 @@ const RecipeCreate = ({ onEdit }) => {
           disabled={checkIfDisabled()}
           className={styles.button}
         >
-          Создать рецепт
+          Создать пост
         </Button>
       </Form>
     </Container>

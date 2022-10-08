@@ -53,11 +53,17 @@ class Recipe(models.Model):
     name = models.TextField("Название", max_length=200)
     text = models.TextField("Описание")
     image = models.ImageField(
-        verbose_name="Изображение", upload_to="recipes/", editable=True
+        verbose_name="Изображение",
+        upload_to="collect/",
+        editable=True,
+        blank=True,
+        null=True,
     )
     cooking_time = models.PositiveSmallIntegerField(
         "Время приготовления (в минутах)",
-        validators=[MinValueValidator(MIN_COOKING_TIME)],
+        # validators=[MinValueValidator(MIN_COOKING_TIME)],
+        blank=True,
+        null=True,
     )
     author = models.ForeignKey(
         User,
@@ -69,8 +75,12 @@ class Recipe(models.Model):
         Ingredient,
         through="IngredientRecipe",
         verbose_name="Ингредиенты",
+        blank=True,
+        null=True,
     )
-    tags = models.ManyToManyField(Tag, verbose_name="Тэги")
+    tags = models.ManyToManyField(
+        Tag, verbose_name="Тэги", blank=True, null=True
+    )
 
     class Meta:
         ordering = ("author",)

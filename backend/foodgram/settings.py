@@ -20,7 +20,7 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
 
@@ -84,6 +84,17 @@ DATABASES = {
         "PORT": "5432",
     }
 }
+
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.postgresql",
+#         "NAME": os.getenv("DB_NAME", "postgres"),
+#         "USER": os.getenv("POSTGRES_USER", "postgres"),
+#         "PASSWORD": os.getenv("POSTGRES_PASSWORD", "12345"),
+#         "HOST": os.getenv("DB_HOST", "localhost"),
+#         "PORT": "5432",
+#     }
+# }
 
 
 AUTH_PASSWORD_VALIDATORS = [

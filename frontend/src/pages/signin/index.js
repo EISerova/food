@@ -11,7 +11,7 @@ const SignIn = ({ onSignIn }) => {
   const authContext = useContext(AuthContext)
 
   return <Main>
-    {authContext && <Redirect to='/recipes' />}
+    {authContext && <Redirect to='/collect' />}
     <Container>
       <MetaTags>
         <title>Войти на сайт</title>

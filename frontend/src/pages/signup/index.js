@@ -11,7 +11,7 @@ const SignUp = ({ onSignUp }) => {
   const authContext = useContext(AuthContext)
 
   return <Main>
-    {authContext && <Redirect to='/recipes' />}
+    {authContext && <Redirect to='/collect' />}
     <Container>
       <MetaTags>
         <title>Регистрация</title>
@@ -61,7 +61,7 @@ const SignUp = ({ onSignUp }) => {
           className={styles.button}
           disabled={!isValid}
         >
-          Создать аккаунт
+          Зарегистрироваться
         </Button>
       </Form>
     </Container>

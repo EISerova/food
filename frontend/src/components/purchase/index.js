@@ -14,11 +14,11 @@ const Purchase = ({ image, name, cooking_time, id, handleRemoveFromCart, is_in_s
         }}
       />
       <h3 className={styles.purchaseTitle}>
-        <LinkComponent className={styles.recipeLink} title={name} href={`/recipes/${id}`} />
+        <LinkComponent className={styles.recipeLink} title={name} href={`/collect/${id}`} />
       </h3>
-      <p className={styles.purchaseText}>
+      {/* <p className={styles.purchaseText}>
         <Icons.ClockIcon />{cooking_time} мин.
-      </p>
+      </p> */}
     </div>
     <a
       href="#"

@@ -12,7 +12,7 @@ import { useRecipe } from '../../utils/index.js'
 import api from '../../api'
 
 const SingleCard = ({ loadItem, updateOrders }) => {
-  const [ loading, setLoading ] = useState(true)
+  const [loading, setLoading] = useState(true)
   const {
     recipe,
     setRecipe,
@@ -26,18 +26,18 @@ const SingleCard = ({ loadItem, updateOrders }) => {
   const history = useHistory()
 
   useEffect(_ => {
-    api.getRecipe ({
-        recipe_id: id
-      })
+    api.getRecipe({
+      recipe_id: id
+    })
       .then(res => {
         setRecipe(res)
         setLoading(false)
       })
       .catch(err => {
-        history.push('/recipes')
+        history.push('/collect')
       })
   }, [])
-  
+
   const { url } = useRouteMatch()
   const {
     author = {},
@@ -50,7 +50,7 @@ const SingleCard = ({ loadItem, updateOrders }) => {
     is_favorited,
     is_in_shopping_cart
   } = recipe
-  
+
   return <Main>
     <Container>
       <MetaTags>
@@ -62,19 +62,20 @@ const SingleCard = ({ loadItem, updateOrders }) => {
         <img src={image} alt={name} className={styles["single-card__image"]} />
         <div className={styles["single-card__info"]}>
           <div className={styles["single-card__header-info"]}>
-              <h1 className={styles["single-card__title"]}>{name}</h1>
-              {authContext && <Button
-                modifier='style_none'
-                clickHandler={_ => {
-                  handleLike({ id, toLike: Number(!is_favorited) })
-                }}
-              >
-                {is_favorited ? <Icons.StarBigActiveIcon /> : <Icons.StarBigIcon />}
-              </Button>}
+            <h1 className={styles["single-card__title"]}>{name}</h1>
+            {authContext && <Button
+              modifier='style_none'
+              clickHandler={_ => {
+                handleLike({ id, toLike: Number(!is_favorited) })
+              }}
+            >
+              {is_favorited ? <Icons.StarBigActiveIcon /> : <Icons.StarBigIcon />}
+            </Button>}
           </div>
           <TagsContainer tags={tags} />
           <div>
-            <p className={styles['single-card__text']}><Icons.ClockIcon /> {cooking_time} мин.</p>
+            <TagsContainer tags={tags} />
+            {/* <p className={styles['single-card__text']}><Icons.ClockIcon /> {cooking_time} мин.</p> */}
             <p className={styles['single-card__text_with_link']}>
               <div className={styles['single-card__text']}>
                 <Icons.UserIcon /> <LinkComponent
@@ -85,12 +86,12 @@ const SingleCard = ({ loadItem, updateOrders }) => {
               </div>
               {(userContext || {}).id === author.id && <LinkComponent
                 href={`${url}/edit`}
-                title='Редактировать рецепт'
+                title='Редактировать пост'
                 className={styles['single-card__edit']}
               />}
             </p>
           </div>
-          <div className={styles['single-card__buttons']}>
+          {/* <div className={styles['single-card__buttons']}>
             {authContext && <Button
               className={styles['single-card__button']}
               modifier={is_in_shopping_cart ? 'style_light' : 'style_dark-blue'}
@@ -110,11 +111,11 @@ const SingleCard = ({ loadItem, updateOrders }) => {
             >
               {author.is_subscribed ? 'Отписаться от автора' : 'Подписаться на автора'}
             </Button>}
-          </div>
-          <Ingredients ingredients={ingredients} />
+          </div> */}
+          {/* <Ingredients ingredients={ingredients} /> */}
           <Description description={text} />
         </div>
-    </div>
+      </div>
     </Container>
   </Main>
 }

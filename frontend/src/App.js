@@ -25,11 +25,11 @@ import {
 import { AuthContext, UserContext } from './contexts'
 
 function App() {
-  const [ loggedIn, setLoggedIn ] = useState(null)
-  const [ user, setUser ] = useState({})
-  const [ loading, setLoading ] = useState(false)
-  const [ orders, setOrders ] = useState(0)
-  const [ menuToggled, setMenuToggled ] = useState(false)
+  const [loggedIn, setLoggedIn] = useState(null)
+  const [user, setUser] = useState({})
+  const [loading, setLoading] = useState(false)
+  const [orders, setOrders] = useState(0)
+  const [menuToggled, setMenuToggled] = useState(false)
   const location = useLocation()
 
   const registration = ({
@@ -90,13 +90,13 @@ function App() {
         setLoggedIn(false)
       }
     })
-    .catch(err => {
-      const errors = Object.values(err)
-      if (errors) {
-        alert(errors.join(', '))
-      }
-      setLoggedIn(false)
-    })
+      .catch(err => {
+        const errors = Object.values(err)
+        if (errors) {
+          alert(errors.join(', '))
+        }
+        setLoggedIn(false)
+      })
   }
 
   const loadSingleItem = ({ id, callback }) => {
@@ -168,7 +168,7 @@ function App() {
   if (loggedIn === null) {
     return <div className={styles.loading}>Loading!!</div>
   }
-  
+
   return <AuthContext.Provider value={loggedIn}>
     <UserContext.Provider value={user}>
       <div className={cn("App", {
@@ -214,14 +214,14 @@ function App() {
 
           <ProtectedRoute
             exact
-            path='/recipes/create'
+            path='/collect/create'
             component={RecipeCreate}
             loggedIn={loggedIn}
           />
 
           <ProtectedRoute
             exact
-            path='/recipes/:id/edit'
+            path='/collect/:id/edit'
             component={RecipeEdit}
             loggedIn={loggedIn}
             loadItem={loadSingleItem}
@@ -237,7 +237,7 @@ function App() {
 
           <Route
             exact
-            path='/recipes/:id'
+            path='/collect/:id'
           >
             <SingleCard
               loggedIn={loggedIn}
@@ -246,7 +246,7 @@ function App() {
             />
           </Route>
 
-          <Route exact path='/recipes'>
+          <Route exact path='/collect'>
             <Main
               updateOrders={updateOrders}
             />
@@ -264,7 +264,7 @@ function App() {
             />
           </Route>
           <Route path='/'>
-            {loggedIn ? <Redirect to='/recipes' /> : <Redirect to='/signin'/>}
+            {loggedIn ? <Redirect to='/collect' /> : <Redirect to='/signin' />}
           </Route>
         </Switch>
         <Footer />

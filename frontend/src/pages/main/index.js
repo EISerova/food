@@ -1,4 +1,4 @@
-import { Card, Title, Pagination, CardList, Container, Main, CheckboxGroup  } from '../../components'
+import { Card, Title, Pagination, CardList, Container, Main, CheckboxGroup } from '../../components'
 import styles from './styles.module.css'
 import { useRecipes } from '../../utils/index.js'
 import { useEffect } from 'react'
@@ -35,30 +35,30 @@ const HomePage = ({ updateOrders }) => {
     getRecipes({ page: recipesPage, tags: tagsValue })
   }, [recipesPage, tagsValue])
 
-  useEffect(_ => {
-    api.getTags()
-      .then(tags => {
-        setTagsValue(tags.map(tag => ({ ...tag, value: true })))
-      })
-  }, [])
+  // useEffect(_ => {
+  //   api.getTags()
+  //     .then(tags => {
+  //       setTagsValue(tags.map(tag => ({ ...tag, value: true })))
+  //     })
+  // }, [])
 
 
   return <Main>
     <Container>
       <MetaTags>
-        <title>Рецепты</title>
-        <meta name="description" content="Продуктовый помощник - Рецепты" />
-        <meta property="og:title" content="Рецепты" />
+        <title>ZOV ZAO - всё фронту</title>
+        <meta name="description" content="ZOV ZAO - сборы" />
+        <meta property="og:title" content="Сборы" />
       </MetaTags>
       <div className={styles.title}>
-        <Title title='Рецепты' />
-        <CheckboxGroup
+        <Title title='Сборы' />
+        {/* <CheckboxGroup
           values={tagsValue}
           handleChange={value => {
             setRecipesPage(1)
             handleTagsChange(value)
           }}
-        />
+        /> */}
       </div>
       <CardList>
         {recipes.map(card => <Card

@@ -207,15 +207,15 @@ class RecipeCreateSeializer(serializers.ModelSerializer):
             )
         return value
 
-    def validate(self, data):
-        ingredients_ids = set()
-        for ingredient in data["ingredients"]:
-            ingredients_ids.add(ingredient["id"])
-        if len(data["ingredients"]) > len(ingredients_ids):
-            raise serializers.ValidationError(
-                {"detail": DOUBLE_INGREDIENT_ADD_ERROR}
-            )
-        return data
+    # def validate(self, data):
+    #     ingredients_ids = set()
+    #     for ingredient in data["ingredients"]:
+    #         ingredients_ids.add(ingredient["id"])
+    #     if len(data["ingredients"]) > len(ingredients_ids):
+    #         raise serializers.ValidationError(
+    #             {"detail": DOUBLE_INGREDIENT_ADD_ERROR}
+    #         )
+    #     return data
 
     def create_recipe_ingredients(self, new_recipe, recipe_ingredients):
         IngredientRecipe.objects.bulk_create(
@@ -236,10 +236,10 @@ class RecipeCreateSeializer(serializers.ModelSerializer):
         return new_recipe
 
     def update(self, instance, validated_data):
-        prev_ingredients = IngredientRecipe.objects.filter(recipe=instance.id)
-        prev_ingredients.delete()
-        ingredients = validated_data.pop("ingredients")
-        self.create_recipe_ingredients(instance, ingredients)
+        # prev_ingredients = IngredientRecipe.objects.filter(recipe=instance.id)
+        # prev_ingredients.delete()
+        # ingredients = validated_data.pop("ingredients")
+        # self.create_recipe_ingredients(instance, ingredients)
         return super().update(instance, validated_data)
 
     def to_representation(self, instance):

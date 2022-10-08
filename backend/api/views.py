@@ -97,7 +97,7 @@ class RecipeViewSet(ModelViewSet):
     filter_backends = (DjangoFilterBackend,)
     filter_class = RecipeListFilter
     filterset_fields = ["author", "tags"]
-    permission_classes = (IsAuthorOrReadOnly,)
+    # permission_classes = (IsAuthorOrReadOnly,)
 
     def perform_create(self, serializer):
         """Создает рецепт."""
